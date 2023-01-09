@@ -1,0 +1,66 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "~/*": [
+        "./*"
+      ]
+    },
+    "target": "ESNext",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": false,
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false, // true 无.d.ts false 有
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictNullChecks": false,
+    "downlevelIteration": true,
+    "noFallthroughCasesInSwitch": true,
+    "composite": false,
+//    "declarationMap": true,
+    "inlineSources": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true
+  },
+  "rules": {
+    "member-access": false,
+    "ordered-imports": false,
+    "quotemark": false,
+    "no-console": false,
+    "semicolon": false,
+    "jsx-no-lambda": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**/*.ts"
+    ]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build"
+  ]
+}
