@@ -1,10 +1,10 @@
 {
   "name": "react-antd-iui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "react-antd常用二次封装组件",
-  "main": "dist/es/index.js",
-  "module": "dist/es/index.js",
-  "types": "dist/es/index.d.ts",
+  "main": "es/index.js",
+  "module": "es/index.js",
+  "types": "es/index.d.ts",
   "scripts": {
     "dev": "father dev",
     "build": "father build",
