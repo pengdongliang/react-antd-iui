@@ -23,7 +23,7 @@ import IForm from '../IForm/index'
 import type { useTableFormType } from '../IForm/index'
 import useTableColumns from './hooks/useTableColumns'
 import type { useTableColumnsPropsType } from './hooks/useTableColumns'
-import { TableStyled } from '@/src/components/ITable/styled'
+import { TableStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 
 export interface ItableContextType {

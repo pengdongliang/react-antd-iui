@@ -1,6 +1,8 @@
 src/**/test/**
 /build
 /dist
+/es
+/lib
 /types
 .eslintrc.js
 /public

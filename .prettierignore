@@ -1,5 +1,7 @@
 build/
 dist/
+/es
+/lib
 package-lock.json
 node_modules
 public

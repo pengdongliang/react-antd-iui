@@ -2,22 +2,21 @@
   "name": "react-antd-iui",
   "version": "0.0.2",
   "description": "react-antd常用二次封装组件",
-  "main": "dist/esm/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "main": "dist/es/index.js",
+  "module": "dist/es/index.js",
+  "types": "dist/es/index.d.ts",
   "scripts": {
     "dev": "father dev",
     "build": "father build",
     "build:deps": "father prebundle",
     "prepublishOnly": "father doctor && npm run build",
     "format": "prettier --write \"**/*.+(js|jsx|ts|tsx|json|md)\"",
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./dist ./es ./lib",
     "build:npm": "npm run clean && npm run build"
   },
   "keywords": [
     "iui",
-    "antd",
-    "ahooks"
+    "antd"
   ],
   "authors": [
     "Yooco"
@@ -25,17 +24,16 @@
   "license": "MIT",
   "files": [
     "dist",
-    "compiled"
+    "es",
+    "lib"
   ],
   "publishConfig": {
     "access": "public"
   },
   "peerDependencies": {
-    "ahooks": ">=3.7.3",
     "antd": ">=4.24.1",
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0",
-    "styled-components": ">=5.3.6"
+    "react-dom": ">=16.8.0"
   },
   "repository": {
     "type": "git",
@@ -47,14 +45,15 @@
     ]
   },
   "dependencies": {
-    "@babel/runtime": "^7.20.7"
+    "@babel/runtime": "^7.20.7",
+    "ahooks": "^3.7.4",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
-    "ahooks": "^3.7.3",
     "antd": "^4.24.1",
     "babel-plugin-import": "^1.13.6",
     "eslint": "^8.31.0",
@@ -66,7 +65,6 @@
     "father": "^4.1.2",
     "prettier": "^2.8.2",
     "react": "^18.2.0",
-    "styled-components": "^5.3.6",
     "stylelint": "^14.16.1",
     "stylelint-config-prettier": "^9.0.4",
     "stylelint-config-recommended": "^9.0.0",

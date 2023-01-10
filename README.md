@@ -1,18 +1,27 @@
-## React-ITable表格组件使用说明
+# react-antd-iui
 
-### 该组件基于 `Ant Design Table` 扩展, 使用了 `useAntdTable` 来处理常用的 `Ant Design Form` 与 `Ant Design Table` 联动逻辑
+[![NPM version][antd-schema-form-image]][antd-schema-form-url]
+[![NPM version][react-image]][react-url]
+[![NPM version][react-dom-image]][react-dom-url]
+[![NPM version][ant-design-image]][ant-design-url]
 
-### 组件功能
+[antd-schema-form-image]: https://img.shields.io/npm/v/react-antd-iui.svg?style=flat
+[antd-schema-form-url]: https://npmjs.org/package/react-antd-iui
 
-1. [x] `React Hooks` + `Typescript`
-2. [x] 标准Antd表格, 统一配置 `options` , `样式`
-3. [x] 简单表格, 只展示表格数据, 适用于展示一些不用请求网络的静态表格
-4. [x] 自动和手动请求请求表格接口数据
-5. [x] 内置可选搜索栏表单配置(内置表单目前仅支持input和select), 支持表单校验, 表格与搜索栏之间的插槽
-6. [x] 内置可选编辑单元格和编辑行(内置表单目前仅支持input), 支持表单校验
-7. [ ] 内置表单增加多个常用表单类型
-8. [ ] 编辑行增加modal, 增加查看行modal
-9. [ ] 合并所有表单配置为一个配置
+[react-image]: https://img.shields.io/badge/react-%3E=16.8.0-red.svg
+[react-url]: https://github.com/facebook/react
+
+[react-dom-image]: https://img.shields.io/badge/react--dom-%3E=16.8.0-red.svg
+[react-dom-url]: https://github.com/facebook/react
+
+[ant-design-image]: https://img.shields.io/badge/ant--design-%3E=4-red.svg
+[ant-design-url]: https://github.com/ant-design/ant-design
+
+### react-antd常用二次封装组件
+
+## 组件功能
+
+1. [x] [**ITable**](./src/components/ITable/README.md)
 
 ### 扩展的属性和方法
 
@@ -78,7 +87,6 @@ initParams = { initParams }
 |-------------------------|------------|--------------------------|-----------------------------------------------------------------------|
 | defaultPaginationConfig | 基础分页配置     | `PaginationConfigType`   | {current: 1,pageSize: 10,total: 0,pageSizeOptions: [10, 20, 50, 100]} |
 | defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | {rowKey: 'id', bordered: true, scroll: { x: '100%' } }                |
-
 
 ## LICENSE
 
