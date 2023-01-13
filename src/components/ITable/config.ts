@@ -2,8 +2,8 @@ import { TableProps } from 'antd'
 import type { RecordType } from './types/global'
 
 export interface PaginationConfigType {
-  current: number
-  pageSize: number
+  current?: number
+  pageSize?: number
   total?: number
   pageSizeOptions?: number[]
   [key: string]: any

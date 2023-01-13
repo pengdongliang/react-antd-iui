@@ -89,7 +89,7 @@ export interface ITableProps extends TableProps<RecordType> {
   // useAntd使用的options
   useAntdTableOptions?: UseAntdTableOptionsType
   // 初始化分页配置
-  initPaginationConfig?: Partial<PaginationConfigType>
+  initPaginationConfig?: PaginationConfigType
   // 初始参数, 分页初始参数不要放里面
   initParams?: InitParamsType
   // 是否阻止初始自动请求
@@ -120,9 +120,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
     const [editingRowKey, setEditingRowKey] = useState('')
     const iFormRef: RefType = useRef(null)
     // 分页
-    const { paginationConfig } = useITablePaginationConfig(
-      initPaginationConfig as PaginationConfigType
-    )
+    const { paginationConfig } = useITablePaginationConfig(initPaginationConfig)
     // 数据处理
     const defaultParams = useMemo(
       () => [{ ...paginationConfig }, { ...initParams }],
