@@ -62,7 +62,15 @@
 | optionProps   | 表单元素 `option` 的 `props`  | `any`             | -   |
 | itemNode      | 表单元素, 如传了优先使用            | `React.ReactNode` | -   |
 
-### 手动/自动请求数据
+#### **ConfigProvider 全局配置**
+
+| 参数                  | 说明                               | 类型                        | 默认值                                                                     |
+|---------------------|----------------------------------|---------------------------|-------------------------------------------------------------------------|
+| isUseHttp           | 是否使用 `use-http` 请求, 否则使用 `fetch` | `boolean`                 | true                                                                    |
+| iTableRequestFields | 表格请求字段名                          | `ITableRequestFieldsType` | { current: 'page', pageSize: 'limit', total: 'total', records: 'list' } |
+| antdContextOptions  | antd表格全局配置项, **注意上下文顺序**         | `AntdConfigProviderProps` | -                                                                       |
+
+### 使用示例
 
 ```typescript jsx
 // 手动请求数据
@@ -79,6 +87,25 @@ setTimeout(() => {
 < ITable
 initParams = { initParams }
 />
+
+// 简单表格
+<ITable
+  columns={columns}
+  dataSource={dataSource}
+  simpleTableFlag
+  blockAutoRequestFlag
+  // 简单表格, 必须传getTableData或者getTableDataApi, 值随便传, 不会使用到
+  getTableData={(pagination, formData) => {
+    // eslint-disable-next-line no-console
+    console.log('pagination, formData', pagination, formData)
+    return Promise.resolve({ total: 1, list: [] })
+  }}
+/>
+
+// 如果外层样式TableStyled是styled(Table), 使用as="div"
+<TableStyled as="div">
+  <ITable />
+</TableStyled>
 ```
 
 ### 默认配置文件config.ts

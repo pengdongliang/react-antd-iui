@@ -1,6 +1,6 @@
 {
-  "name": "react-antd-iui-dev",
-  "version": "0.0.4",
+  "name": "react-antd-iui",
+  "version": "0.0.6",
   "description": "react-antd常用二次封装组件",
   "main": "es/index.js",
   "module": "es/index.js",

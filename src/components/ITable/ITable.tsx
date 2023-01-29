@@ -66,7 +66,10 @@ export type ItableQueryType = {
   // 获取数据接口地址，比获取表格数据方法优先
   getTableDataApi: string
   // 获取表格数据方法, 返回一个Promise
-  getTableData: () => Promise<UseAntdRowItemType>
+  getTableData: (
+    pagination: UseAntdTablePaginationType,
+    formData: Record<string, unknown>
+  ) => Promise<UseAntdRowItemType>
 }
 
 export type QueryTypeEitherOr = EitherOr<

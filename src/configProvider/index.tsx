@@ -1,15 +1,16 @@
 import React, { useMemo } from 'react'
 import { ConfigProvider as AntdConfigProvider } from 'antd'
+import { ConfigProviderProps as AntdConfigProviderProps } from 'antd/es/config-provider'
 import { defaultITableRequestFields } from '@/components/ITable/hooks/useITableParamsData'
-import type { iTableRequestFieldsType } from '@/components/ITable/hooks/useITableParamsData'
+import type { ITableRequestFieldsType } from '@/components/ITable/hooks/useITableParamsData'
 
 export interface configContextType {
   // 是否使用use-http请求
   isUseHttp?: boolean
   // 表格请求字段名
-  iTableRequestFields?: iTableRequestFieldsType
+  iTableRequestFields?: ITableRequestFieldsType
   // antd表格全局配置项
-  antdContextOptions?: typeof AntdConfigProvider
+  antdContextOptions?: AntdConfigProviderProps
 }
 
 export const ConfigContext = React.createContext<configContextType>({})
@@ -30,11 +31,11 @@ const ConfigProvider: React.FC<ConfigProviderProps> = (props) => {
   )
 
   return (
-    // <AntdConfigProvider {...antdContextOptions}>
-    <ConfigContext.Provider value={configContextData}>
-      {children}
-    </ConfigContext.Provider>
-    // </AntdConfigProvider>
+    <AntdConfigProvider {...antdContextOptions}>
+      <ConfigContext.Provider value={configContextData}>
+        {children}
+      </ConfigContext.Provider>
+    </AntdConfigProvider>
   )
 }
 

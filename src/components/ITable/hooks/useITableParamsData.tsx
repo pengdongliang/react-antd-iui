@@ -10,7 +10,7 @@ export type getTableDataFuncType = (
   formData: Record<string, unknown>
 ) => Promise<UseAntdRowItemType>
 
-export interface iTableRequestFieldsType {
+export interface ITableRequestFieldsType {
   current?: string
   pageSize?: string
   total?: string
@@ -18,7 +18,7 @@ export interface iTableRequestFieldsType {
   records?: string
 }
 
-export const defaultITableRequestFields: Readonly<iTableRequestFieldsType> = {
+export const defaultITableRequestFields: Readonly<ITableRequestFieldsType> = {
   current: 'page',
   pageSize: 'limit',
   total: 'total',
@@ -60,17 +60,23 @@ function useITableParamsData(props: ITablePropsEitherOr) {
       const url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
 
       if (isUseHttp) {
-        return httpGet(url).then((res) => ({
-          total: res?.data[totalFieldName],
-          list: res?.data[recordsFieldName],
-        }))
+        return httpGet(url).then((res) => {
+          const data = res?.data ?? {}
+          return {
+            total: data[totalFieldName],
+            list: data[recordsFieldName],
+          }
+        })
       }
       return fetch(url)
         .then((res) => res.json())
-        .then((res) => ({
-          total: res?.data[totalFieldName],
-          list: res?.data[recordsFieldName],
-        }))
+        .then((res) => {
+          const data = res?.data ?? {}
+          return {
+            total: data[totalFieldName],
+            list: data[recordsFieldName],
+          }
+        })
     }
   }
 
