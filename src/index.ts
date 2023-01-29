@@ -19,3 +19,6 @@ export type {
   useTableFormType,
   IFormPropsType,
 } from './components/IForm'
+
+export { default as ConfigProvider } from './configProvider'
+export type { configContextType, ConfigProviderProps } from './configProvider'

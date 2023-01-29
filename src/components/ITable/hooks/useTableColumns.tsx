@@ -35,7 +35,7 @@ function useTableColumns(props: useTableColumnsPropsType): {
   realColumns: ITableColumnTypes
   components: any
 } {
-  const { columns, editableConfig } = props
+  const { columns, editableConfig = {} } = props
 
   const realColumns = useMemo(() => {
     const { onChange, editRowFlag } = editableConfig as Exclude<

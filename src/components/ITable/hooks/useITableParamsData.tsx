@@ -1,11 +1,29 @@
 import { useAntdTable } from 'ahooks'
+import { useFetch } from 'use-http'
+import { useContext } from 'react'
 import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
+import { ConfigContext } from '@/configProvider'
 
 export type getTableDataFuncType = (
   pagination: UseAntdTablePaginationType,
   formData: Record<string, unknown>
 ) => Promise<UseAntdRowItemType>
+
+export interface iTableRequestFieldsType {
+  current?: string
+  pageSize?: string
+  total?: string
+  // 列表数据字段
+  records?: string
+}
+
+export const defaultITableRequestFields: Readonly<iTableRequestFieldsType> = {
+  current: 'page',
+  pageSize: 'limit',
+  total: 'total',
+  records: 'list',
+}
 
 /**
  * iTable表格请求方式的数据
@@ -15,6 +33,14 @@ function useITableParamsData(props: ITablePropsEitherOr) {
   const { getTableData, getTableDataApi, useAntdTableOptions, initParams } =
     props
   let getTableDataPromise: getTableDataFuncType | null = null
+  const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
+  const {
+    current: currentFieldName,
+    pageSize: pageSizeFieldName,
+    total: totalFieldName,
+    records: recordsFieldName,
+  } = iTableRequestFields ?? defaultITableRequestFields
+  const { get: httpGet } = useFetch()
 
   if (getTableData) {
     getTableDataPromise = getTableData
@@ -24,23 +50,26 @@ function useITableParamsData(props: ITablePropsEitherOr) {
       formData: Record<string, unknown>
     ): Promise<UseAntdRowItemType> => {
       const { current, pageSize } = searchParams ?? {}
-      // TODO 更换为getTableDataApi
-      let query = `page=${current}&size=${pageSize}`
       const queryParams = {
+        [currentFieldName]: current,
+        [pageSizeFieldName]: pageSize,
         ...initParams,
         ...formData,
       }
-      Object.entries(queryParams).forEach(([key, value]) => {
-        if (value) {
-          query += `&${key}=${value}`
-        }
-      })
+      const urlParams = new URLSearchParams(queryParams)
+      const url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
 
-      return fetch(`https://randomuser.me/api?results=55&${query}`)
+      if (isUseHttp) {
+        return httpGet(url).then((res) => ({
+          total: res?.data[totalFieldName],
+          list: res?.data[recordsFieldName],
+        }))
+      }
+      return fetch(url)
         .then((res) => res.json())
         .then((res) => ({
-          total: res.info.results,
-          list: res.results,
+          total: res?.data[totalFieldName],
+          list: res?.data[recordsFieldName],
         }))
     }
   }

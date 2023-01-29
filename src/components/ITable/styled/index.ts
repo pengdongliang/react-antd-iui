@@ -1,7 +1,6 @@
 import styled from 'styled-components'
-import { Table } from 'antd'
 
-export const TableStyled: typeof Table = styled(Table)`
+export const TableContainerStyled = styled.div`
   .itable-editable-cell {
     position: relative;
   }

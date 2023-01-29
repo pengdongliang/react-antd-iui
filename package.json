@@ -47,7 +47,8 @@
   "dependencies": {
     "@babel/runtime": "^7.20.7",
     "ahooks": "^3.7.4",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "use-http": "^1.0.27"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

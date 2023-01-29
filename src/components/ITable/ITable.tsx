@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react'
 import { useUpdateEffect } from 'ahooks'
-import { Space } from 'antd'
+import { Space, Table } from 'antd'
 import type { TableProps } from 'antd'
 import type { GetRowKey } from 'rc-table/es/interface'
 import type {
@@ -23,7 +23,7 @@ import IForm from '../IForm/index'
 import type { useTableFormType } from '../IForm/index'
 import useTableColumns from './hooks/useTableColumns'
 import type { useTableColumnsPropsType } from './hooks/useTableColumns'
-import { TableStyled } from '@/components/ITable/styled'
+import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 
 export interface ItableContextType {
@@ -217,14 +217,16 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
             />
           ) : null}
           {props.children}
-          <TableStyled
-            {...defaultItableConfig}
-            {...editableData}
-            {...props}
-            {...tableProps}
-            {...useSimpleITableData}
-            columns={realColumns}
-          />
+          <TableContainerStyled>
+            <Table
+              {...defaultItableConfig}
+              {...editableData}
+              {...props}
+              {...tableProps}
+              {...useSimpleITableData}
+              columns={realColumns}
+            />
+          </TableContainerStyled>
         </Space>
       </ItableContext.Provider>
     )
