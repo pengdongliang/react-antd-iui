@@ -20,6 +20,5 @@ export const defaultPaginationConfig: PaginationConfigType = {
 // 默认antd表格配置
 export const defaultTableConfig: TableProps<RecordType> = {
   rowKey: 'id',
-  bordered: true,
   scroll: { x: '100%' },
 }

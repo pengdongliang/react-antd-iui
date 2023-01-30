@@ -56,7 +56,12 @@ function useITableParamsData(props: ITablePropsEitherOr) {
         ...initParams,
         ...formData,
       }
-      const urlParams = new URLSearchParams(queryParams)
+      let urlParams = ''
+      Object.entries(queryParams).forEach(([key, value]) => {
+        if (value !== undefined && value !== '') {
+          urlParams += `${urlParams ? '&' : ''}${key}=${value}`
+        }
+      })
       const url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
 
       if (isUseHttp) {

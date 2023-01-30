@@ -21,4 +21,10 @@ export const TableContainerStyled = styled.div`
     .itable-editable-cell-value-wrap {
     border: 1px solid #434343;
   }
+
+  .${({ theme }) => theme.prefix || 'ant'}-table-cell {
+    .${({ theme }) => theme.prefix || 'ant'}-typography {
+      user-select: none;
+    }
+  }
 `

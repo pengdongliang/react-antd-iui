@@ -82,11 +82,13 @@ const IForm: React.FC<IFormPropsType> = React.forwardRef(
       } else if (itemName) {
         switch (itemName) {
           case 'input':
-            itemNode = <Input {...i?.itemProps} />
+            itemNode = (
+              <Input onPressEnter={submit} allowClear {...i?.itemProps} />
+            )
             break
           case 'select':
             itemNode = (
-              <Select {...i?.itemProps}>
+              <Select allowClear {...i?.itemProps}>
                 {i?.itemProps?.options.map(
                   (p: { label: string; value: string | number }) => (
                     <Option
@@ -129,7 +131,7 @@ const IForm: React.FC<IFormPropsType> = React.forwardRef(
           <Row gutter={24}>
             {formItemNode}
             <Col>
-              <Space wrap>
+              <Space wrap size={20}>
                 <Button type="primary" onClick={submit}>
                   搜索
                 </Button>

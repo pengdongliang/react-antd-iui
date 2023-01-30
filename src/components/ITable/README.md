@@ -104,4 +104,4 @@ initParams = { initParams }
 | 参数                      | 说明         | 类型                       | 默认值                                                                   |
 |-------------------------|------------|--------------------------|-----------------------------------------------------------------------|
 | defaultPaginationConfig | 基础分页配置     | `PaginationConfigType`   | {current: 1,pageSize: 10,total: 0,pageSizeOptions: [10, 20, 50, 100]} |
-| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | {rowKey: 'id', bordered: true, scroll: { x: '100%' } }                |
+| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | {rowKey: 'id', scroll: { x: '100%' } }                                |

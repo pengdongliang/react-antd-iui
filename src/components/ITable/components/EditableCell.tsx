@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Form, Input, InputRef, Space, Typography } from 'antd'
+import { Divider, Form, Input, InputRef, Space, Typography } from 'antd'
 import { EditableContext } from './EditableRow'
 import type { EditableContextType } from './EditableRow'
 import type { editableType } from '../hooks/useTableColumns'
@@ -131,7 +131,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
       if (dataIndex === 'opt') {
         if (editRowFlag) {
           const editNode = realEditingKeyRowFlag ? (
-            <Space>
+            <Space split={<Divider type="vertical" />}>
               <Typography.Link onClick={() => save()}>保存</Typography.Link>
               <Typography.Link onClick={() => cancel()}>取消</Typography.Link>
             </Space>
@@ -146,7 +146,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
             </Typography.Link>
           )
           return (
-            <Space>
+            <Space split={<Divider type="vertical" />}>
               {editNode}
               {childrenHOC}
             </Space>
