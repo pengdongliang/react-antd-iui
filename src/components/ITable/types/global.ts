@@ -11,7 +11,7 @@ export interface TableResponseData<T> {
   totalRecord: number | string // 总页数
 }
 
-export interface RecordType {
+export interface RecordType extends Record<string, any> {
   [k: string]: any
 }
 
