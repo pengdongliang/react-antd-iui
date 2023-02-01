@@ -15,7 +15,9 @@ import type {
 } from 'ahooks/es/useAntdTable/types'
 import type { PaginationConfigType } from './config'
 import { defaultPaginationConfig } from './config'
-import useITableParamsData from './hooks/useITableParamsData'
+import useITableParamsData, {
+  ITableRequestFieldsType,
+} from './hooks/useITableParamsData'
 import useITablePaginationConfig from './hooks/useITablePaginationConfig'
 import useSimpleITable from './hooks/useSimpleITable'
 import useDefaultItableConfig from './hooks/useDefaultItableConfig'
@@ -103,6 +105,10 @@ export interface ITableProps extends TableProps<RecordType> {
   useTableForm?: useTableFormType
   // 编辑表格的配置参数
   editableConfig?: EditableConfigType
+  // 表格请求字段名
+  iTableRequestFields?: ITableRequestFieldsType
+  // 是否在最左边显示序列号, 从多少开始, 默认从1开始
+  serialNumber?: boolean | number
   [k: string]: any
 }
 
@@ -119,6 +125,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
       simpleTableFlag,
       useTableForm,
       editableConfig,
+      serialNumber = true,
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
     const iFormRef: RefType = useRef(null)
@@ -186,6 +193,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
     const { realColumns, components } = useTableColumns({
       columns,
       editableConfig,
+      serialNumber,
     } as useTableColumnsPropsType)
 
     // 是否编辑表格
@@ -204,7 +212,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
         editingRowKey,
         setEditingRowKey,
       }),
-      [iFormRef, rowKey, editingRowKey, setEditingRowKey]
+      [rowKey, editingRowKey]
     )
 
     return (

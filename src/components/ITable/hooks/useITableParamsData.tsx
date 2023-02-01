@@ -30,8 +30,13 @@ export const defaultITableRequestFields: Readonly<ITableRequestFieldsType> = {
  * @param props
  */
 function useITableParamsData(props: ITablePropsEitherOr) {
-  const { getTableData, getTableDataApi, useAntdTableOptions, initParams } =
-    props
+  const {
+    getTableData,
+    getTableDataApi,
+    useAntdTableOptions,
+    initParams,
+    iTableRequestFields: propsITableRequestFields,
+  } = props
   let getTableDataPromise: getTableDataFuncType | null = null
   const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
   const {
@@ -39,7 +44,9 @@ function useITableParamsData(props: ITablePropsEitherOr) {
     pageSize: pageSizeFieldName,
     total: totalFieldName,
     records: recordsFieldName,
-  } = iTableRequestFields ?? defaultITableRequestFields
+  } = propsITableRequestFields ??
+  iTableRequestFields ??
+  defaultITableRequestFields
   const { get: httpGet } = useFetch()
 
   if (getTableData) {

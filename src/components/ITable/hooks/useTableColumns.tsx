@@ -25,6 +25,7 @@ export type ITableColumnTypes = (Exclude<
 export interface useTableColumnsPropsType {
   columns: ITableColumnTypes
   editableConfig?: EditableConfigType
+  serialNumber?: boolean | number
 }
 
 /**
@@ -35,14 +36,14 @@ function useTableColumns(props: useTableColumnsPropsType): {
   realColumns: ITableColumnTypes
   components: any
 } {
-  const { columns, editableConfig = {} } = props
+  const { columns, editableConfig = {}, serialNumber } = props
 
   const realColumns = useMemo(() => {
     const { onChange, editRowFlag } = editableConfig as Exclude<
       EditableConfigType,
       boolean
     >
-    return columns?.map((col) => {
+    const mapCol = columns?.map((col) => {
       const { editable } = col
       if (!onChange || !editable) {
         return col
@@ -62,7 +63,22 @@ function useTableColumns(props: useTableColumnsPropsType): {
         },
       }
     })
-  }, [columns, editableConfig]) as ITableColumnTypes
+    if (
+      Array.isArray(mapCol) &&
+      mapCol.length &&
+      (serialNumber === 0 || serialNumber)
+    ) {
+      mapCol.unshift({
+        title: '序号',
+        dataIndex: 'serial$number',
+        width: 62,
+        render: (text, record, index) => {
+          return index + (typeof serialNumber === 'number' ? serialNumber : 1)
+        },
+      })
+    }
+    return mapCol
+  }, [columns, editableConfig, serialNumber]) as ITableColumnTypes
 
   const components = useMemo(() => {
     return editableConfig
