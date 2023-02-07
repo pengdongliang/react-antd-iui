@@ -31,31 +31,36 @@
 
 #### **ITable**
 
-| 参数                         | 说明                                                  | 类型                                  | 默认值                                                                     |
-|----------------------------|-----------------------------------------------------|-------------------------------------|-------------------------------------------------------------------------|
-| getTableDataApi            | 请求数据的Api                                            | `string`                            | -                                                                       |
-| getTableData               | 请求数据的方法, **注意和 `getTableDataApi` 不能同时使用**           | `() => Promise<UseAntdRowItemType>` | -                                                                       |
-| initPaginationConfig       | 初始化分页数据                                             | `PaginationConfigType`              | -                                                                       |
-| initParams                 | 初始化表单数据                                             | `InitParamsType`                    | -                                                                       |
-| blockAutoRequestFlag       | `true`: 阻止初始内置自动请求, `auto` : `initParams` 数据更新后自动请求 | `boolean` / `'auto'`                | false                                                                   |
-| simpleTableFlag            | 简单表格, 只展示表格数据, 适用于展示一些不用请求网络的静态表格                   | `boolean`                           | false                                                                   |
-| useAntdTableOptions        | `useAntdTable` 的配置参数                                | `UseAntdTableOptionsType`           | -                                                                       |
-| useTableForm               | 使用搜索栏的表单配置参数                                        | `useTableFormType`                  | -                                                                       |
-| editableConfig             | 编辑表格的配置参数                                           | `EditableConfigType`                | -                                                                       |
-| editableConfig.editRowFlag | `true` : 编辑行, `false` : 编辑单元格                       | `boolean`                           | false                                                                   |
-| editableConfig.onChange    | 配置了的话保存优先使用                                         | `(args: EditArgumentsType) => void` | -                                                                       |
-| iTableRequestFields        | 表格请求字段名                                             | `ITableRequestFieldsType`           | { current: 'page', pageSize: 'limit', total: 'total', records: 'list' } |
-| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean                            | number`                                                                 | 1 |
-| children                   | 表格与搜索栏之间的插槽                                         | `React.ReactNode`                   | -                                                                       |
+| 参数                         | 说明                                                  | 类型                                                        | 默认值                                                                     |
+|----------------------------|-----------------------------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------|
+| getTableDataApi            | 请求数据的Api                                            | `string`                                                  | -                                                                       |
+| getTableData               | 请求数据的方法, **注意和 `getTableDataApi` 不能同时使用**           | `() => Promise<UseAntdRowItemType>`                       | -                                                                       |
+| requestParamsHandler       | 在请求之前额外处理请求参数                                       | `( searchParams, formData ) : { searchParams, formData }` | -                                                                       |
+| initPaginationConfig       | 初始化分页数据                                             | `PaginationConfigType`                                    | -                                                                       |
+| initParams                 | 初始化表单数据                                             | `InitParamsType`                                          | -                                                                       |
+| blockAutoRequestFlag       | `true`: 阻止初始内置自动请求, `auto` : `initParams` 数据更新后自动请求 | `boolean` / `'auto'`                                      | false                                                                   |
+| simpleTableFlag            | 简单表格, 只展示表格数据, 适用于展示一些不用请求网络的静态表格                   | `boolean`                                                 | false                                                                   |
+| useAntdTableOptions        | `useAntdTable` 的配置参数                                | `UseAntdTableOptionsType`                                 | -                                                                       |
+| useTableForm               | 使用搜索栏的表单配置参数                                        | `useTableFormType`                                        | -                                                                       |
+| editableConfig             | 编辑表格的配置参数                                           | `EditableConfigType`                                      | -                                                                       |
+| editableConfig.editRowFlag | `true` : 编辑行, `false` : 编辑单元格                       | `boolean`                                                 | false                                                                   |
+| editableConfig.onChange    | 配置了的话保存优先使用                                         | `(args: EditArgumentsType) => void`                       | -                                                                       |
+| iTableRequestFields        | 表格请求字段名                                             | `ITableRequestFieldsType`                                 | { current: 'page', pageSize: 'limit', total: 'total', records: 'list' } |
+| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean                                                  | number`                                                                 | 1 |
+| children                   | 表格与搜索栏之间的插槽                                         | `React.ReactNode`                                         | -                                                                       |
 
 #### **useTableForm**
 
-| 参数                  | 说明                  | 类型                | 默认值 |
-|---------------------|---------------------|-------------------|-----|
-| formProps           | 表单 `Form` 的 `props` | `FormProps`       | -   |
-| formItemOptions     | 表单 `Form.Item` 配置   | `IFormItemType[]` | -   |
-| formItemAppendNodes | 按钮组, 追加到表单按钮后面      | `React.ReactNode` | -   |
-| formItemRowNodes    | 表单追加一行元素            | `React.ReactNode` | -   |
+| 参数                  | 说明                  | 类型                | 默认值    |
+|---------------------|---------------------|-------------------|--------|
+| formProps           | 表单 `Form` 的 `props` | `FormProps`       | -      |
+| formItemOptions     | 表单 `Form.Item` 配置   | `IFormItemType[]` | -      |
+| formItemAppendNodes | 按钮组, 追加到表单按钮后面      | `React.ReactNode` | -      |
+| formItemRowNodes    | 表单追加一行元素            | `React.ReactNode` | -      |
+| showSearch          | 是否显示查询按钮            | `boolean`         | `true` |
+| searchText          | 查询文本                | `string`          | `查询`   |
+| showReset           | 是否显示查询按钮            | `boolean`         | `true` |
+| resetText           | 是否显示查询按钮            | `string`          | `重置`   |
 
 #### **IFormItemType**
 

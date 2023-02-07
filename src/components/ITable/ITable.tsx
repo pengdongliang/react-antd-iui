@@ -109,6 +109,14 @@ export interface ITableProps extends TableProps<RecordType> {
   iTableRequestFields?: ITableRequestFieldsType
   // 是否在最左边显示序列号, 从多少开始, 默认从1开始
   serialNumber?: boolean | number
+  // 在请求之前额外处理请求参数
+  requestParamsHandler?: (
+    searchParams: UseAntdTablePaginationType,
+    formData: Record<string, unknown>
+  ) => {
+    searchParams: UseAntdTablePaginationType
+    formData: Record<string, unknown>
+  }
   [k: string]: any
 }
 

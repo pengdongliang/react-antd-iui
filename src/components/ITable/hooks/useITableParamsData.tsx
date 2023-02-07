@@ -36,6 +36,7 @@ function useITableParamsData(props: ITablePropsEitherOr) {
     useAntdTableOptions,
     initParams,
     iTableRequestFields: propsITableRequestFields,
+    requestParamsHandler,
   } = props
   let getTableDataPromise: getTableDataFuncType | null = null
   const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
@@ -56,12 +57,16 @@ function useITableParamsData(props: ITablePropsEitherOr) {
       searchParams: UseAntdTablePaginationType,
       formData: Record<string, unknown>
     ): Promise<UseAntdRowItemType> => {
-      const { current, pageSize } = searchParams ?? {}
+      const { searchParams: realSearchParams, formData: realFormData } =
+        typeof requestParamsHandler === 'function'
+          ? requestParamsHandler(searchParams, formData)
+          : { searchParams, formData }
+      const { current, pageSize } = realSearchParams ?? {}
       const queryParams = {
         [currentFieldName]: current,
         [pageSizeFieldName]: pageSize,
         ...initParams,
-        ...formData,
+        ...realFormData,
       }
       let urlParams = ''
       Object.entries(queryParams).forEach(([key, value]) => {

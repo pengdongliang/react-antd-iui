@@ -32,6 +32,14 @@ export interface useTableFormType {
   formItemAppendNodes?: React.ReactNode
   // 追加一行元素
   formItemRowNodes?: React.ReactNode
+  // 是否显示查询按钮
+  showSearch?: boolean
+  // 查询文本
+  searchText?: string
+  // 是否显示重置按钮
+  showReset?: boolean
+  // 重置文本
+  resetText?: string
   [k: string]: any
 }
 
@@ -118,8 +126,14 @@ const IForm: React.FC<IFormPropsType> = React.forwardRef(
       )
     })
 
-    const formItemAppendNodesItem = useTableForm?.formItemAppendNodes
-    const formItemRowNodesItem = useTableForm?.formItemRowNodes
+    const {
+      formItemAppendNodes: formItemAppendNodesItem,
+      formItemRowNodes: formItemRowNodesItem,
+      showSearch = true,
+      showReset = true,
+      searchText = '查询',
+      resetText = '重置',
+    } = useTableForm
 
     return (
       <Form
@@ -132,10 +146,12 @@ const IForm: React.FC<IFormPropsType> = React.forwardRef(
             {formItemNode}
             <Col>
               <Space wrap size={20}>
-                <Button type="primary" onClick={submit}>
-                  搜索
-                </Button>
-                <Button onClick={reset}>重置</Button>
+                {showSearch && (
+                  <Button type="primary" onClick={submit}>
+                    {searchText}
+                  </Button>
+                )}
+                {showReset && <Button onClick={reset}>{resetText}</Button>}
                 {formItemAppendNodesItem}
               </Space>
             </Col>
