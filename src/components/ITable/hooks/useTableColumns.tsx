@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { Tooltip } from 'antd'
+import type { TooltipProps } from 'antd'
 import type {
   ITableProps,
   EditableConfigType,
@@ -18,8 +20,11 @@ export type ITableColumnTypes = (Exclude<
   ITableProps['columns'],
   undefined
 >[number] & {
+  // 当前单元格是否可以编辑
   editable?: editableType
   dataIndex?: string
+  // 当前单元格是否可以自定义显示Tooltip
+  tooltip?: boolean | TooltipProps
 })[]
 
 export interface useTableColumnsPropsType {
@@ -44,17 +49,56 @@ function useTableColumns(props: useTableColumnsPropsType): {
       boolean
     >
     const mapCol = columns?.map((col) => {
-      const { editable } = col
+      const { editable, tooltip, render } = col
+      let newCol = col
+      if (tooltip) {
+        const tooltipProps =
+          Object.prototype.toString
+            .call(tooltip)
+            .match(/^\[object\s(.*)\]$/)[1] === 'Object'
+            ? (tooltip as TooltipProps)
+            : {}
+        newCol = {
+          ...newCol,
+          render: (text, record, index) => (
+            <Tooltip
+              placement="topLeft"
+              title={text}
+              color="orange"
+              {...tooltipProps}
+            >
+              <div
+                style={{
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                }}
+                onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => {
+                  const target = e.target as HTMLDivElement
+                  if (target.clientWidth >= target.scrollWidth) {
+                    target.style.pointerEvents = 'none' // 阻止鼠标事件
+                    if (render) {
+                      e.currentTarget.style.pointerEvents = 'none' // 阻止鼠标事件
+                    }
+                  }
+                }}
+              >
+                {render ? render(text, record, index) : text}
+              </div>
+            </Tooltip>
+          ),
+        }
+      }
       if (!onChange || !editable) {
-        return col
+        return newCol
       }
       const { handleSave } = editable as Exclude<editableType, boolean>
       const changeHandler = editRowFlag ? onChange : handleSave || onChange
       return {
-        ...col,
+        ...newCol,
         onCell: (record: RecordType, rowIndex) => {
           return {
-            ...col,
+            ...newCol,
             record,
             rowIndex,
             changeHandler,
@@ -72,6 +116,7 @@ function useTableColumns(props: useTableColumnsPropsType): {
         title: '序号',
         dataIndex: 'serial$number',
         width: 62,
+        fixed: !!mapCol[0]?.fixed,
         render: (text, record, index) => {
           return index + (typeof serialNumber === 'number' ? serialNumber : 1)
         },

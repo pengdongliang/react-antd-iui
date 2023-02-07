@@ -178,6 +178,11 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
     useImperativeHandle(ref, () => ({
       ...usetableParamsData,
       run,
+      dataSource:
+        Array.isArray(usetableParamsData?.data?.list) &&
+        usetableParamsData?.data?.list?.length
+          ? usetableParamsData?.data?.list
+          : useSimpleITableData?.dataSource,
     }))
 
     useUpdateEffect(() => {
