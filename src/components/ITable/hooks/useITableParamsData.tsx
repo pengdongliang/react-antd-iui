@@ -1,11 +1,11 @@
 import { useAntdTable } from 'ahooks'
 import { useFetch } from 'use-http'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
 import { ConfigContext } from '@/configProvider'
 
-export type getTableDataFuncType = (
+export type ITableRequestParamsType = (
   pagination: UseAntdTablePaginationType,
   formData: Record<string, unknown>
 ) => Promise<UseAntdRowItemType>
@@ -38,7 +38,7 @@ function useITableParamsData(props: ITablePropsEitherOr) {
     iTableRequestFields: propsITableRequestFields,
     requestParamsHandler,
   } = props
-  let getTableDataPromise: getTableDataFuncType | null = null
+  let getTableDataPromise: ITableRequestParamsType | null = null
   const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
   const {
     current: currentFieldName,
@@ -49,6 +49,8 @@ function useITableParamsData(props: ITablePropsEitherOr) {
   iTableRequestFields ??
   defaultITableRequestFields
   const { get: httpGet } = useFetch()
+  const [queryParams, setQueryParams] = useState({})
+  const [urlSearchParams, setUrlSearchParams] = useState({})
 
   if (getTableData) {
     getTableDataPromise = getTableData
@@ -62,18 +64,22 @@ function useITableParamsData(props: ITablePropsEitherOr) {
           ? requestParamsHandler(searchParams, formData)
           : { searchParams, formData }
       const { current, pageSize } = realSearchParams ?? {}
-      const queryParams = {
+      const paramsData = {
         [currentFieldName]: current,
         [pageSizeFieldName]: pageSize,
         ...initParams,
         ...realFormData,
       }
+      const paramsFilted = {}
       let urlParams = ''
-      Object.entries(queryParams).forEach(([key, value]) => {
+      Object.entries(paramsData).forEach(([key, value]) => {
         if (value !== undefined && value !== '') {
-          urlParams += `${urlParams ? '&' : ''}${key}=${value}`
+          urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(value)}`
+          paramsFilted[key] = value
         }
       })
+      setQueryParams(paramsFilted)
+      setUrlSearchParams(urlParams)
       const url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
 
       if (isUseHttp) {
@@ -98,13 +104,13 @@ function useITableParamsData(props: ITablePropsEitherOr) {
   }
 
   const tableParamsData = useAntdTable(
-    getTableDataPromise as getTableDataFuncType,
+    getTableDataPromise as ITableRequestParamsType,
     {
       ...useAntdTableOptions,
     }
   )
 
-  return tableParamsData
+  return { ...tableParamsData, queryParams, urlSearchParams }
 }
 
 export default useITableParamsData

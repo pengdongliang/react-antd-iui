@@ -9,14 +9,14 @@ import React, {
 import { Divider, Form, Input, InputRef, Space, Typography } from 'antd'
 import { EditableContext } from './EditableRow'
 import type { EditableContextType } from './EditableRow'
-import type { editableType } from '../hooks/useTableColumns'
+import type { EditableType } from '../hooks/useTableColumns'
 import { ItableContext } from '../ITable'
 import type { ItableContextType } from '../ITable'
 import type { RecordType } from '../types/global'
 
 interface EditableCellPropsType {
   title: React.ReactNode
-  editable: editableType
+  editable: EditableType
   children: React.ReactNode
   dataIndex: keyof RecordType
   record: RecordType

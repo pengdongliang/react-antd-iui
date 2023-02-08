@@ -65,7 +65,7 @@
 
 | 参数       | 说明                    | 类型                       | 默认值 |
 |----------|-----------------------|--------------------------|-----|
-| editable | 当前单元格是否可以编辑           | `editableType`           | -   |
+| editable | 当前单元格是否可以编辑           | `EditableType`           | -   |
 | tooltip  | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -   |
 
 #### **useTableForm**

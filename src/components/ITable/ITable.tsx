@@ -24,7 +24,7 @@ import useDefaultItableConfig from './hooks/useDefaultItableConfig'
 import IForm from '../IForm/index'
 import type { useTableFormType } from '../IForm/index'
 import useTableColumns from './hooks/useTableColumns'
-import type { useTableColumnsPropsType } from './hooks/useTableColumns'
+import type { UseTableColumnsPropsType } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 
@@ -207,7 +207,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
       columns,
       editableConfig,
       serialNumber,
-    } as useTableColumnsPropsType)
+    } as UseTableColumnsPropsType)
 
     // 是否编辑表格
     const editableData = useMemo(() => {

@@ -10,7 +10,7 @@ import EditableRow from '../components/EditableRow'
 import EditableCell from '../components/EditableCell'
 import type { RecordType } from '../types/global'
 
-export type editableType =
+export type EditableType =
   | {
       handleSave: (args: EditArgumentsType) => void
     }
@@ -21,13 +21,13 @@ export type ITableColumnTypes = (Exclude<
   undefined
 >[number] & {
   // 当前单元格是否可以编辑
-  editable?: editableType
+  editable?: EditableType
   dataIndex?: string
   // 当前单元格是否可以自定义显示Tooltip
   tooltip?: boolean | TooltipProps
 })[]
 
-export interface useTableColumnsPropsType {
+export interface UseTableColumnsPropsType {
   columns: ITableColumnTypes
   editableConfig?: EditableConfigType
   serialNumber?: boolean | number
@@ -37,7 +37,7 @@ export interface useTableColumnsPropsType {
  * 表格columns处理
  * @param props
  */
-function useTableColumns(props: useTableColumnsPropsType): {
+function useTableColumns(props: UseTableColumnsPropsType): {
   realColumns: ITableColumnTypes
   components: any
 } {
@@ -92,7 +92,7 @@ function useTableColumns(props: useTableColumnsPropsType): {
       if (!onChange || !editable) {
         return newCol
       }
-      const { handleSave } = editable as Exclude<editableType, boolean>
+      const { handleSave } = editable as Exclude<EditableType, boolean>
       const changeHandler = editRowFlag ? onChange : handleSave || onChange
       return {
         ...newCol,

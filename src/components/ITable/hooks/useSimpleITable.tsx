@@ -1,6 +1,6 @@
 import type { RecordType } from '../types/global'
 
-export interface useSimpleITablePropsType {
+export interface UseSimpleITablePropsType {
   blockAutoRequestFlag?: boolean | 'auto'
   simpleTableFlag?: boolean
   propsDataSource?: RecordType[]
@@ -13,7 +13,7 @@ export interface useSimpleITablePropsType {
  * 简单表格处理
  * @param props
  */
-function useSimpleITable(props: useSimpleITablePropsType) {
+function useSimpleITable(props: UseSimpleITablePropsType) {
   const { blockAutoRequestFlag, simpleTableFlag, tableProps, propsDataSource } =
     props
   const simpleDataSource =
