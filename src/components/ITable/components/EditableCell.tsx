@@ -119,7 +119,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
               }
               const columnOnClick = (child?.props as React.ComponentProps<any>)
                 ?.onClick
-              if (typeof columnOnClick === 'function') columnOnClick(params)
+              if (typeof columnOnClick === 'function') columnOnClick(...params)
             },
           }
         )
