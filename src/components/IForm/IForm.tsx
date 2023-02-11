@@ -3,8 +3,9 @@ import { Button, Col, Form, Input, Row, Select, Space } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import type { FormItemProps } from 'antd/es/form/FormItem'
 import type { FormProps } from 'antd/es/form'
+import { FormInstance } from 'antd/lib/form/hooks/useForm'
 import type { InitParamsType } from '../ITable/ITable'
-import type { RecordType, RefType } from '../ITable/types/global'
+import type { RecordType } from '../ITable/types/global'
 
 const { Option } = Select
 
@@ -50,118 +51,119 @@ export interface IFormPropsType {
   // 表格使用
   useTableForm?: useTableFormType
   columns?: ColumnsType<RecordType>
-  [k: string]: any
 }
 
-const IForm: React.FC<IFormPropsType> = React.forwardRef(
-  (props: IFormPropsType, ref: RefType) => {
-    const [form] = Form.useForm()
-    const { submit, reset, initParams, useTableForm } = props
+export type IFormRefType = React.Ref<{
+  formRef: FormInstance
+}>
 
-    const formRef = useMemo(() => form, [form])
-    useImperativeHandle(ref, () => ({
-      formRef,
-    }))
+const IForm = React.forwardRef((props: IFormPropsType, ref: IFormRefType) => {
+  const [form] = Form.useForm()
+  const { submit, reset, initParams, useTableForm } = props
 
-    const [initialValues, setInitialValues] = useState(initParams)
+  const formRef = useMemo(() => form, [form])
+  useImperativeHandle(ref, () => ({
+    formRef,
+  }))
 
-    useEffect(() => {
-      setInitialValues(initParams)
-      form.setFieldsValue(initParams)
-    }, [initParams, form])
+  const [initialValues, setInitialValues] = useState(initParams)
 
-    const dynamicFormItemData: useTableFormType = useMemo(() => {
-      let arr: IFormItemType[] = []
-      const { formItemOptions } = useTableForm as useTableFormType
-      if (Array.isArray(formItemOptions) && formItemOptions.length) {
-        arr = formItemOptions?.map((i) => {
-          return { ...i }
-        })
+  useEffect(() => {
+    setInitialValues(initParams)
+    form.setFieldsValue(initParams)
+  }, [initParams, form])
+
+  const dynamicFormItemData: useTableFormType = useMemo(() => {
+    let arr: IFormItemType[] = []
+    const { formItemOptions } = useTableForm as useTableFormType
+    if (Array.isArray(formItemOptions) && formItemOptions.length) {
+      arr = formItemOptions?.map((i) => {
+        return { ...i }
+      })
+    }
+    return { ...useTableForm, formItemOptions: arr }
+  }, [useTableForm])
+
+  const formItemNode = dynamicFormItemData?.formItemOptions?.map((i) => {
+    if (!i?.name) return null
+    const itemName = i?.itemName?.toLocaleLowerCase()
+    let itemNode = null
+    if (React.isValidElement(i?.itemNode)) {
+      itemNode = i?.itemNode
+    } else if (itemName) {
+      switch (itemName) {
+        case 'input':
+          itemNode = (
+            <Input onPressEnter={submit} allowClear {...i?.itemProps} />
+          )
+          break
+        case 'select':
+          itemNode = (
+            <Select allowClear {...i?.itemProps}>
+              {i?.itemProps?.options.map(
+                (p: { label: string; value: string | number }) => (
+                  <Option
+                    {...i?.optionProps}
+                    value={p?.value}
+                    title={p?.label}
+                  />
+                )
+              )}
+            </Select>
+          )
+          break
+        default:
+          itemNode = null
+          break
       }
-      return { ...useTableForm, formItemOptions: arr }
-    }, [useTableForm])
+    }
 
-    const formItemNode = dynamicFormItemData?.formItemOptions?.map((i) => {
-      if (!i?.name) return null
-      const itemName = i?.itemName?.toLocaleLowerCase()
-      let itemNode = null
-      if (React.isValidElement(i?.itemNode)) {
-        itemNode = i?.itemNode
-      } else if (itemName) {
-        switch (itemName) {
-          case 'input':
-            itemNode = (
-              <Input onPressEnter={submit} allowClear {...i?.itemProps} />
-            )
-            break
-          case 'select':
-            itemNode = (
-              <Select allowClear {...i?.itemProps}>
-                {i?.itemProps?.options.map(
-                  (p: { label: string; value: string | number }) => (
-                    <Option
-                      {...i?.optionProps}
-                      value={p?.value}
-                      title={p?.label}
-                    />
-                  )
-                )}
-              </Select>
-            )
-            break
-          default:
-            itemNode = null
-            break
-        }
-      }
-
-      if (!itemNode) return null
-
-      return (
-        <Col key={`${i?.name}-${i?.itemName}`}>
-          <Form.Item {...i?.formItemProps} name={i?.name}>
-            {itemNode}
-          </Form.Item>
-        </Col>
-      )
-    })
-
-    const {
-      formItemAppendNodes: formItemAppendNodesItem,
-      formItemRowNodes: formItemRowNodesItem,
-      showSearch = true,
-      showReset = true,
-      searchText = '查询',
-      resetText = '重置',
-    } = useTableForm
+    if (!itemNode) return null
 
     return (
-      <Form
-        {...useTableForm?.formProps}
-        form={form}
-        initialValues={initialValues}
-      >
-        <Space direction="vertical">
-          <Row gutter={24}>
-            {formItemNode}
-            <Col>
-              <Space wrap size={20}>
-                {showSearch && (
-                  <Button type="primary" onClick={submit}>
-                    {searchText}
-                  </Button>
-                )}
-                {showReset && <Button onClick={reset}>{resetText}</Button>}
-                {formItemAppendNodesItem}
-              </Space>
-            </Col>
-          </Row>
-          <Row>{formItemRowNodesItem}</Row>
-        </Space>
-      </Form>
+      <Col key={`${i?.name}-${i?.itemName}`}>
+        <Form.Item {...i?.formItemProps} name={i?.name}>
+          {itemNode}
+        </Form.Item>
+      </Col>
     )
-  }
-)
+  })
+
+  const {
+    formItemAppendNodes: formItemAppendNodesItem,
+    formItemRowNodes: formItemRowNodesItem,
+    showSearch = true,
+    showReset = true,
+    searchText = '查询',
+    resetText = '重置',
+  } = useTableForm
+
+  return (
+    <Form
+      {...useTableForm?.formProps}
+      form={form}
+      initialValues={initialValues}
+    >
+      <Space direction="vertical">
+        <Row gutter={24}>
+          {formItemNode}
+          <Col>
+            <Space wrap size={20}>
+              {showSearch && (
+                <Button type="primary" onClick={submit}>
+                  {searchText}
+                </Button>
+              )}
+              {showReset && <Button onClick={reset}>{resetText}</Button>}
+              {formItemAppendNodesItem}
+            </Space>
+          </Col>
+        </Row>
+        <Row>{formItemRowNodesItem}</Row>
+      </Space>
+    </Form>
+  )
+})
 
 IForm.displayName = 'IForm'
 

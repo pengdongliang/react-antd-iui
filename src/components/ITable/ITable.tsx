@@ -17,6 +17,7 @@ import type { PaginationConfigType } from './config'
 import { defaultPaginationConfig } from './config'
 import useITableParamsData, {
   ITableRequestFieldsType,
+  UseITableParamsDataResultType,
 } from './hooks/useITableParamsData'
 import useITablePaginationConfig from './hooks/useITablePaginationConfig'
 import useSimpleITable from './hooks/useSimpleITable'
@@ -27,6 +28,7 @@ import useTableColumns from './hooks/useTableColumns'
 import type { UseTableColumnsPropsType } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
+import { IFormRefType } from '@/components/IForm/IForm'
 
 export interface ItableContextType {
   iFormRef?: RefType
@@ -89,8 +91,13 @@ export interface InitParamsType {
   [k: string]: any
 }
 
+export type ITableRef = React.Ref<
+  UseITableParamsDataResultType & {
+    dataSource?: Record<string, any>[]
+  }
+>
+
 export interface ITableProps extends TableProps<RecordType> {
-  ref?: RefType
   // useAntd使用的options
   useAntdTableOptions?: UseAntdTableOptionsType
   // 初始化分页配置
@@ -117,13 +124,12 @@ export interface ITableProps extends TableProps<RecordType> {
     searchParams: UseAntdTablePaginationType
     formData: Record<string, unknown>
   }
-  [k: string]: any
 }
 
 export type ITablePropsEitherOr = QueryTypeEitherOr & ITableProps
 
-const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
-  (props: ITablePropsEitherOr, ref: RefType) => {
+const ITable = React.forwardRef(
+  (props: ITablePropsEitherOr, ref: ITableRef) => {
     const {
       columns,
       useAntdTableOptions,
@@ -136,7 +142,7 @@ const ITable: React.FC<ITablePropsEitherOr> = React.forwardRef(
       serialNumber = true,
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
-    const iFormRef: RefType = useRef(null)
+    const iFormRef: IFormRefType = useRef(null)
     // 分页
     const { paginationConfig } = useITablePaginationConfig(initPaginationConfig)
     // 数据处理

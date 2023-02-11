@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Tooltip } from 'antd'
 import type { TooltipProps } from 'antd'
 import type {
@@ -42,6 +42,7 @@ function useTableColumns(props: UseTableColumnsPropsType): {
   components: any
 } {
   const { columns, editableConfig = {}, serialNumber } = props
+  const [hasColumnEditable, setHasColumnEditable] = useState(false)
 
   const realColumns = useMemo(() => {
     const { onChange, editRowFlag } = editableConfig as Exclude<
@@ -49,7 +50,7 @@ function useTableColumns(props: UseTableColumnsPropsType): {
       boolean
     >
     const mapCol = columns?.map((col) => {
-      const { editable, tooltip, render } = col
+      const { editable, tooltip, dataIndex, render } = col
       let newCol = col
       if (tooltip) {
         const tooltipProps =
@@ -63,6 +64,7 @@ function useTableColumns(props: UseTableColumnsPropsType): {
           render: (text, record, index) => (
             <Tooltip
               placement="topLeft"
+              destroyTooltipOnHide
               title={text}
               color="orange"
               {...tooltipProps}
@@ -89,10 +91,17 @@ function useTableColumns(props: UseTableColumnsPropsType): {
           ),
         }
       }
-      if (!onChange || !editable) {
+      if (
+        !onChange ||
+        (!editable && dataIndex !== 'opt') ||
+        (!editRowFlag && dataIndex === 'opt')
+      ) {
         return newCol
       }
-      const { handleSave } = editable as Exclude<EditableType, boolean>
+      if (editable && !hasColumnEditable) {
+        setHasColumnEditable(true)
+      }
+      const { handleSave } = (editable ?? {}) as Exclude<EditableType, boolean>
       const changeHandler = editRowFlag ? onChange : handleSave || onChange
       return {
         ...newCol,
@@ -123,10 +132,15 @@ function useTableColumns(props: UseTableColumnsPropsType): {
       })
     }
     return mapCol
-  }, [columns, editableConfig, serialNumber]) as ITableColumnTypes
+  }, [
+    columns,
+    editableConfig,
+    hasColumnEditable,
+    serialNumber,
+  ]) as ITableColumnTypes
 
   const components = useMemo(() => {
-    return editableConfig
+    return hasColumnEditable && editableConfig
       ? {
           body: {
             row: EditableRow,
@@ -134,7 +148,7 @@ function useTableColumns(props: UseTableColumnsPropsType): {
           },
         }
       : {}
-  }, [editableConfig])
+  }, [editableConfig, hasColumnEditable])
 
   return { realColumns, components }
 }

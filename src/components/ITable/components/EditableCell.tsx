@@ -15,7 +15,6 @@ import type { ItableContextType } from '../ITable'
 import type { RecordType } from '../types/global'
 
 interface EditableCellPropsType {
-  title: React.ReactNode
   editable: EditableType
   children: React.ReactNode
   dataIndex: keyof RecordType
@@ -26,7 +25,6 @@ interface EditableCellPropsType {
 }
 
 const EditableCell: React.FC<EditableCellPropsType> = ({
-  title,
   editable,
   children,
   dataIndex,
@@ -127,33 +125,33 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
   )
 
   const childNode = useMemo(() => {
-    if (editable) {
-      if (dataIndex === 'opt') {
-        if (editRowFlag) {
-          const editNode = realEditingKeyRowFlag ? (
-            <Space split={<Divider type="vertical" />}>
-              <Typography.Link onClick={() => save()}>保存</Typography.Link>
-              <Typography.Link onClick={() => cancel()}>取消</Typography.Link>
-            </Space>
-          ) : (
-            <Typography.Link
-              disabled={!!realEditingKeyRowFlag}
-              onClick={() =>
-                edit(record as Partial<RecordType> & { key: React.Key })
-              }
-            >
-              编辑
-            </Typography.Link>
-          )
-          return (
-            <Space split={<Divider type="vertical" />}>
-              {editNode}
-              {childrenHOC}
-            </Space>
-          )
-        }
-        return childrenHOC
+    if (dataIndex === 'opt') {
+      if (editRowFlag) {
+        const editNode = realEditingKeyRowFlag ? (
+          <Space split={<Divider type="vertical" />}>
+            <Typography.Link onClick={() => save()}>保存</Typography.Link>
+            <Typography.Link onClick={() => cancel()}>取消</Typography.Link>
+          </Space>
+        ) : (
+          <Typography.Link
+            disabled={!!realEditingKeyRowFlag}
+            onClick={() =>
+              edit(record as Partial<RecordType> & { key: React.Key })
+            }
+          >
+            编辑
+          </Typography.Link>
+        )
+        return (
+          <Space split={<Divider type="vertical" />}>
+            {editNode}
+            {childrenHOC}
+          </Space>
+        )
       }
+      return childrenHOC
+    }
+    if (editable) {
       const divProps = editRowFlag
         ? {}
         : {
@@ -186,7 +184,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
   ])
 
   return (
-    <td {...restProps} title={title as string}>
+    <td {...restProps} title="">
       {childNode}
     </td>
   )

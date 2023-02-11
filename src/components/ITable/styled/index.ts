@@ -12,14 +12,14 @@ export const TableContainerStyled = styled.div`
 
   .itable-editable-row:hover .itable-editable-cell-value-wrap {
     padding: 4px 11px;
-    border: 1px solid #d9d9d9;
+    border: 1px solid ${({ theme }) => theme.hoverBorderColor ?? '#d9d9d9'};
     border-radius: 2px;
   }
 
   [data-theme='dark']
     .itable-editable-row:hover
     .itable-editable-cell-value-wrap {
-    border: 1px solid #434343;
+    border: 1px solid ${({ theme }) => theme.hoverBorderDarkColor ?? '#434343'};
   }
 
   .${({ theme }) => theme.prefix || 'ant'}-table-cell {

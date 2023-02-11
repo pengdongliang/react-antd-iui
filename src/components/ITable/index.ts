@@ -11,11 +11,13 @@ export type {
   InitParamsType,
   ITableProps,
   ITablePropsEitherOr,
+  ITableRef,
 } from './ITable'
 
 export type { PaginationConfigType } from './config'
 export type {
   ITableRequestParamsType,
   ITableRequestFieldsType,
+  UseITableParamsDataResultType,
 } from './hooks/useITableParamsData'
 export type { EditableType, ITableColumnTypes } from './hooks/useTableColumns'

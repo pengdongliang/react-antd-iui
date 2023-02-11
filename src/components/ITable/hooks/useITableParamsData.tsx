@@ -1,6 +1,7 @@
 import { useAntdTable } from 'ahooks'
 import { useFetch } from 'use-http'
 import { useContext, useState } from 'react'
+import { AntdTableResult } from 'ahooks/lib/useAntdTable/types'
 import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
 import { ConfigContext } from '@/configProvider'
@@ -16,6 +17,14 @@ export interface ITableRequestFieldsType {
   total?: string
   // 列表数据字段
   records?: string
+  // 列表数据外层
+  data?: string
+}
+
+export interface UseITableParamsDataResultType
+  extends AntdTableResult<any, any> {
+  queryParams: Record<string, any>
+  urlSearchParams: string
 }
 
 export const defaultITableRequestFields: Readonly<ITableRequestFieldsType> = {
@@ -23,13 +32,16 @@ export const defaultITableRequestFields: Readonly<ITableRequestFieldsType> = {
   pageSize: 'limit',
   total: 'total',
   records: 'list',
+  data: 'data',
 }
 
 /**
  * iTable表格请求方式的数据
  * @param props
  */
-function useITableParamsData(props: ITablePropsEitherOr) {
+function useITableParamsData(
+  props: ITablePropsEitherOr
+): UseITableParamsDataResultType {
   const {
     getTableData,
     getTableDataApi,
@@ -45,12 +57,15 @@ function useITableParamsData(props: ITablePropsEitherOr) {
     pageSize: pageSizeFieldName,
     total: totalFieldName,
     records: recordsFieldName,
-  } = propsITableRequestFields ??
-  iTableRequestFields ??
-  defaultITableRequestFields
+    data: dataFieldName,
+  } = {
+    ...defaultITableRequestFields,
+    ...iTableRequestFields,
+    ...propsITableRequestFields,
+  }
   const { get: httpGet } = useFetch()
   const [queryParams, setQueryParams] = useState({})
-  const [urlSearchParams, setUrlSearchParams] = useState({})
+  const [urlSearchParams, setUrlSearchParams] = useState<string>()
 
   if (getTableData) {
     getTableDataPromise = getTableData
@@ -84,7 +99,7 @@ function useITableParamsData(props: ITablePropsEitherOr) {
 
       if (isUseHttp) {
         return httpGet(url).then((res) => {
-          const data = res?.data ?? {}
+          const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
           return {
             total: data[totalFieldName],
             list: data[recordsFieldName],
@@ -94,7 +109,7 @@ function useITableParamsData(props: ITablePropsEitherOr) {
       return fetch(url)
         .then((res) => res.json())
         .then((res) => {
-          const data = res?.data ?? {}
+          const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
           return {
             total: data[totalFieldName],
             list: data[recordsFieldName],

@@ -1,5 +1,9 @@
-export { default as ITable, ItableContext } from './components/ITable'
+export { ITable, ItableContext, IForm } from './components'
 export type {
+  IFormItemType,
+  useTableFormType,
+  IFormPropsType,
+  IFormRefType,
   ItableContextType,
   EditArgumentsType,
   EditableConfigType,
@@ -11,7 +15,12 @@ export type {
   InitParamsType,
   ITableProps,
   ITablePropsEitherOr,
-} from './components/ITable'
+  ITableRef,
+  PaginationConfigType,
+  ITableRequestParamsType,
+  ITableRequestFieldsType,
+  UseITableParamsDataResultType,
+} from './components'
 
 export type {
   JSONResponse,
@@ -21,13 +30,6 @@ export type {
   EitherOr,
   RefType,
 } from './components/ITable/types/global'
-
-export { default as IForm } from './components/IForm'
-export type {
-  IFormItemType,
-  useTableFormType,
-  IFormPropsType,
-} from './components/IForm'
 
 export { default as ConfigProvider } from './configProvider'
 export type { configContextType, ConfigProviderProps } from './configProvider'

@@ -20,23 +20,23 @@
 
 #### **ITable**
 
-| 参数                         | 说明                                                  | 类型                                                        | 默认值                                                                       |
-|----------------------------|-----------------------------------------------------|-----------------------------------------------------------|---------------------------------------------------------------------------|
-| getTableDataApi            | 请求数据的Api                                            | `string`                                                  | -                                                                         |
-| getTableData               | 请求数据的方法, **注意和 `getTableDataApi` 不能同时使用**           | `() => Promise<UseAntdRowItemType>`                       | -                                                                         |
-| requestParamsHandler       | 在请求之前额外处理请求参数                                       | `( searchParams, formData ) : { searchParams, formData }` | -                                                                         |
-| initPaginationConfig       | 初始化分页数据                                             | `PaginationConfigType`                                    | -                                                                         |
-| initParams                 | 初始化表单数据                                             | `InitParamsType`                                          | -                                                                         |
-| blockAutoRequestFlag       | `true`: 阻止初始内置自动请求, `auto` : `initParams` 数据更新后自动请求 | `boolean` / `'auto'`                                      | `false`                                                                   |
-| simpleTableFlag            | 简单表格, 只展示表格数据, 适用于展示一些不用请求网络的静态表格                   | `boolean`                                                 | `false`                                                                   |
-| useAntdTableOptions        | `useAntdTable` 的配置参数                                | `UseAntdTableOptionsType`                                 | -                                                                         |
-| useTableForm               | 使用搜索栏的表单配置参数                                        | `useTableFormType`                                        | -                                                                         |
-| editableConfig             | 编辑表格的配置参数                                           | `EditableConfigType`                                      | -                                                                         |
-| editableConfig.editRowFlag | `true` : 编辑行, `false` : 编辑单元格                       | `boolean`                                                 | `false`                                                                   |
-| editableConfig.onChange    | 配置了的话保存优先使用                                         | `(args: EditArgumentsType) => void`                       | -                                                                         |
-| iTableRequestFields        | 表格请求字段名                                             | `ITableRequestFieldsType`                                 | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list' }` |
-| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean`                                                 | `number`                                                                  | 1 |
-| children                   | 表格与搜索栏之间的插槽                                         | `React.ReactNode`                                         | -                                                                         |
+| 参数                         | 说明                                                  | 类型                                                        | 默认值                                                                                     |
+|----------------------------|-----------------------------------------------------|-----------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| getTableDataApi            | 请求数据的Api                                            | `string`                                                  | -                                                                                       |
+| getTableData               | 请求数据的方法, **注意和 `getTableDataApi` 不能同时使用**           | `() => Promise<UseAntdRowItemType>`                       | -                                                                                       |
+| requestParamsHandler       | 在请求之前额外处理请求参数                                       | `( searchParams, formData ) : { searchParams, formData }` | -                                                                                       |
+| initPaginationConfig       | 初始化分页数据                                             | `PaginationConfigType`                                    | -                                                                                       |
+| initParams                 | 初始化表单数据                                             | `InitParamsType`                                          | -                                                                                       |
+| blockAutoRequestFlag       | `true`: 阻止初始内置自动请求, `auto` : `initParams` 数据更新后自动请求 | `boolean` / `'auto'`                                      | `false`                                                                                 |
+| simpleTableFlag            | 简单表格, 只展示表格数据, 适用于展示一些不用请求网络的静态表格                   | `boolean`                                                 | `false`                                                                                 |
+| useAntdTableOptions        | `useAntdTable` 的配置参数                                | `UseAntdTableOptionsType`                                 | -                                                                                       |
+| useTableForm               | 使用搜索栏的表单配置参数                                        | `useTableFormType`                                        | -                                                                                       |
+| editableConfig             | 编辑表格的配置参数                                           | `EditableConfigType`                                      | -                                                                                       |
+| editableConfig.editRowFlag | `true` : 编辑行, `false` : 编辑单元格                       | `boolean`                                                 | `false`                                                                                 |
+| editableConfig.onChange    | 配置了的话保存优先使用                                         | `(args: EditArgumentsType) => void`                       | -                                                                                       |
+| iTableRequestFields        | 表格请求字段名                                             | `ITableRequestFieldsType`                                 | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list', data: 'data' }` |
+| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean`                                                 | `number`                                                                                | 1 |
+| children                   | 表格与搜索栏之间的插槽                                         | `React.ReactNode`                                         | -                                                                                       |
 
 #### **columns**
 
@@ -71,11 +71,11 @@
 
 #### **ConfigProvider 全局配置**
 
-| 参数                  | 说明                               | 类型                        | 默认值                                                                       |
-|---------------------|----------------------------------|---------------------------|---------------------------------------------------------------------------|
-| isUseHttp           | 是否使用 `use-http` 请求, 否则使用 `fetch` | `boolean`                 | `true`                                                                    |
-| iTableRequestFields | 表格请求字段名                          | `ITableRequestFieldsType` | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list' }` |
-| antdContextOptions  | antd表格全局配置项, **注意上下文顺序**         | `AntdConfigProviderProps` | -                                                                         |
+| 参数                  | 说明                               | 类型                        | 默认值                                                                                     |
+|---------------------|----------------------------------|---------------------------|-----------------------------------------------------------------------------------------|
+| isUseHttp           | 是否使用 `use-http` 请求, 否则使用 `fetch` | `boolean`                 | `true`                                                                                  |
+| iTableRequestFields | 表格请求字段名                          | `ITableRequestFieldsType` | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list', data: 'data' }` |
+| antdContextOptions  | antd表格全局配置项, **注意上下文顺序**         | `AntdConfigProviderProps` | -                                                                                       |
 
 ### 使用示例
 
