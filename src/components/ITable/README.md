@@ -35,7 +35,7 @@
 | editableConfig.editRowFlag | `true` : 编辑行, `false` : 编辑单元格                       | `boolean`                                                 | `false`                                                                                 |
 | editableConfig.onChange    | 配置了的话保存优先使用                                         | `(args: EditArgumentsType) => void`                       | -                                                                                       |
 | iTableRequestFields        | 表格请求字段名                                             | `ITableRequestFieldsType`                                 | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list', data: 'data' }` |
-| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean`                                                 | `number`                                                                                | 1 |
+| serialNumber               | 是否在最左边显示序列号, 从多少开始, 默认从1开始                          | `boolean` / `number`                                      | `1`                                                                                     | 1 |
 | children                   | 表格与搜索栏之间的插槽                                         | `React.ReactNode`                                         | -                                                                                       |
 
 #### **columns**

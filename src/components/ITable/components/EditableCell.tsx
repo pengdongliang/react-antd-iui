@@ -1,4 +1,5 @@
 import React, {
+  HTMLAttributes,
   useCallback,
   useContext,
   useEffect,
@@ -119,6 +120,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
                 ?.onClick
               if (typeof columnOnClick === 'function') columnOnClick(...params)
             },
+            key: `${rowKey}-${dataIndex}`,
           }
         )
       : child
@@ -183,8 +185,14 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     toggleEdit,
   ])
 
+  const filterProps = {
+    title: '',
+    render: '',
+    key: `${rowKey}-${dataIndex}`,
+  } as HTMLAttributes<any>
+
   return (
-    <td {...restProps} title="">
+    <td {...restProps} {...filterProps}>
       {childNode}
     </td>
   )

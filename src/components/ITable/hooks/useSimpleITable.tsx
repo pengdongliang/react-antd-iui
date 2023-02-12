@@ -1,12 +1,18 @@
+import { ITableProps } from '../ITable'
 import type { RecordType } from '../types/global'
 
+/**
+ * 简单表格props类型
+ */
 export interface UseSimpleITablePropsType {
+  /** 是否阻止初始自动请求 */
   blockAutoRequestFlag?: boolean | 'auto'
+  /** 是否为简单表格 */
   simpleTableFlag?: boolean
+  /** 通过props传递过来的表格数据 */
   propsDataSource?: RecordType[]
-  tableProps?: {
-    [key: string]: any
-  }
+  /** 表格props */
+  tableProps?: ITableProps
 }
 
 /**

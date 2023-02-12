@@ -30,22 +30,39 @@ import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 import { IFormRefType } from '@/components/IForm/IForm'
 
+/**
+ * 表格上下文类型
+ */
 export interface ItableContextType {
+  /** 搜索栏Form Ref */
   iFormRef?: RefType
+  /** 表格行key */
   rowKey?: string | GetRowKey<RecordType>
+  /** 编辑行Key */
   editingRowKey?: string
+  /** 设置编辑行Key */
   setEditingRowKey?: (key: string) => void
 }
 
 export const ItableContext = React.createContext<ItableContextType>({})
 
+/**
+ * 编辑回调方法的参数
+ */
 export interface EditArgumentsType {
+  /** 当前行数据 */
   record: RecordType
+  /** 当前编辑的值 */
   fieldValue: any
+  /** 当前编辑的字段名 */
   fieldName: string | number
+  /** 编辑行的行表单数据 */
   fieldsValue: { [k: string]: any }
 }
 
+/**
+ * 编辑配置类型
+ */
 export type EditableConfigType =
   | {
       onChange: (args: EditArgumentsType) => void
@@ -53,11 +70,17 @@ export type EditableConfigType =
     }
   | boolean
 
+/**
+ * 数据类型
+ */
 export type UseAntdRowItemType = {
   total: number
   list: any[]
 }
 
+/**
+ * 分页数据
+ */
 export interface UseAntdTablePaginationType {
   current: number
   pageSize: number
@@ -67,21 +90,27 @@ export interface UseAntdTablePaginationType {
 }
 
 export type ItableQueryType = {
-  // 获取数据接口地址，比获取表格数据方法优先
+  /** 获取数据接口地址，比获取表格数据方法优先 */
   getTableDataApi: string
-  // 获取表格数据方法, 返回一个Promise
+  /** 获取表格数据方法, 返回一个Promise */
   getTableData: (
     pagination: UseAntdTablePaginationType,
     formData: Record<string, unknown>
   ) => Promise<UseAntdRowItemType>
 }
 
+/**
+ * 获取数据参数类型
+ */
 export type QueryTypeEitherOr = EitherOr<
   ItableQueryType,
   'getTableDataApi',
   'getTableData'
 >
 
+/**
+ * 表格options
+ */
 export type UseAntdTableOptionsType = AntdTableOptions<
   UseAntdRowItemType,
   AntdTableParams
@@ -91,41 +120,52 @@ export interface InitParamsType {
   [k: string]: any
 }
 
+/**
+ * ITable Ref类型
+ */
 export type ITableRef = React.Ref<
   UseITableParamsDataResultType & {
     dataSource?: Record<string, any>[]
   }
 >
 
+/**
+ * 表格props类型初始
+ */
 export interface ITableProps extends TableProps<RecordType> {
-  // useAntd使用的options
+  /** useAntd使用的options */
   useAntdTableOptions?: UseAntdTableOptionsType
-  // 初始化分页配置
+  /** 初始化分页配置 */
   initPaginationConfig?: PaginationConfigType
-  // 初始参数, 分页初始参数不要放里面
+  /** 初始参数, 分页初始参数不要放里面 */
   initParams?: InitParamsType
-  // 是否阻止初始自动请求
+  /** 是否阻止初始自动请求 */
   blockAutoRequestFlag?: boolean | 'auto'
-  // 是否是简单表格, 不请求数据和分页, 使用传过来的数据
+  /** 是否是简单表格, 不请求数据和分页, 使用传过来的数据 */
   simpleTableFlag?: boolean
-  // 使用搜索栏的表单配置参数
+  /** 使用搜索栏的表单配置参数 */
   useTableForm?: useTableFormType
-  // 编辑表格的配置参数
+  /** 编辑表格的配置参数 */
   editableConfig?: EditableConfigType
-  // 表格请求字段名
+  /** 表格请求字段名 */
   iTableRequestFields?: ITableRequestFieldsType
-  // 是否在最左边显示序列号, 从多少开始, 默认从1开始
+  /** 是否在最左边显示序列号, 从多少开始, 默认从1开始 */
   serialNumber?: boolean | number
-  // 在请求之前额外处理请求参数
+  /** 在请求之前额外处理请求参数 */
   requestParamsHandler?: (
     searchParams: UseAntdTablePaginationType,
     formData: Record<string, unknown>
   ) => {
+    /** 分页数据 */
     searchParams: UseAntdTablePaginationType
+    /** 表单数据 */
     formData: Record<string, unknown>
   }
 }
 
+/**
+ * 表格props类型
+ */
 export type ITablePropsEitherOr = QueryTypeEitherOr & ITableProps
 
 const ITable = React.forwardRef(
@@ -143,9 +183,9 @@ const ITable = React.forwardRef(
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
     const iFormRef: IFormRefType = useRef(null)
-    // 分页
+    /** 分页 */
     const { paginationConfig } = useITablePaginationConfig(initPaginationConfig)
-    // 数据处理
+    /** 数据处理 */
     const defaultParams = useMemo(
       () => [{ ...paginationConfig }, { ...initParams }],
       [paginationConfig, initParams]
@@ -195,27 +235,27 @@ const ITable = React.forwardRef(
       if (blockAutoRequestFlag === 'auto') run(initParams)
     }, [initParams])
 
-    // 简单表格
+    /** 简单表格 */
     const useSimpleITableData = useSimpleITable({
       blockAutoRequestFlag,
       simpleTableFlag,
       tableProps,
       propsDataSource: props?.dataSource as RecordType[],
     })
-    // 默认antd表格配置
+    /** 默认antd表格配置 */
     const defaultItableConfig = useDefaultItableConfig(props)
 
     let rowKey = props.rowKey || defaultItableConfig.rowKey
     if (typeof rowKey === 'function') rowKey = ''
 
-    // 处理表格columns
+    /** 处理表格columns */
     const { realColumns, components } = useTableColumns({
       columns,
       editableConfig,
       serialNumber,
     } as UseTableColumnsPropsType)
 
-    // 是否编辑表格
+    /** 是否编辑表格 */
     const editableData = useMemo(() => {
       if (!editableConfig) return {}
       return {

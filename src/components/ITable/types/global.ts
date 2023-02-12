@@ -6,9 +6,12 @@ export interface JSONResponse {
 }
 
 export interface TableResponseData<T> {
-  list: T[] // 数据
-  total: number | string // 总数
-  totalRecord: number | string // 总页数
+  /** 数据 */
+  list: T[]
+  /** 总数 */
+  total: number | string
+  /** 总页数 */
+  totalRecord: number | string
 }
 
 export interface RecordType extends Record<string, any> {
@@ -19,7 +22,7 @@ export interface TableResponse extends JSONResponse {
   data?: TableResponseData<RecordType>
 }
 
-// 二选一
+/** 二选一 */
 export type FilterOptional<T> = Pick<
   T,
   Exclude<
@@ -55,6 +58,6 @@ export type EitherOr<O extends Objects, L extends string, R extends string> = (
   | PartialEither<Pick<O, L | R>, R>
 ) &
   Omit<O, L | R>
-// 二选一
+/** 二选一 */
 
 export type RefType = MutableRefObject<any> | ((instance: unknown) => void)

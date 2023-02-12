@@ -10,26 +10,39 @@ import EditableRow from '../components/EditableRow'
 import EditableCell from '../components/EditableCell'
 import type { RecordType } from '../types/global'
 
+/**
+ * 编辑类型
+ */
 export type EditableType =
   | {
       handleSave: (args: EditArgumentsType) => void
     }
   | boolean
 
+/**
+ * ITable表格columns属性类型
+ */
 export type ITableColumnTypes = (Exclude<
   ITableProps['columns'],
   undefined
 >[number] & {
-  // 当前单元格是否可以编辑
+  /** 当前单元格是否可以编辑 */
   editable?: EditableType
+  /** dataIndex */
   dataIndex?: string
-  // 当前单元格是否可以自定义显示Tooltip
+  /** 当前单元格是否可以自定义显示Tooltip */
   tooltip?: boolean | TooltipProps
 })[]
 
+/**
+ * columns处理钩子props类型
+ */
 export interface UseTableColumnsPropsType {
+  /** 表格columns属性 */
   columns: ITableColumnTypes
+  /** props配置的编辑参数 */
   editableConfig?: EditableConfigType
+  /** 序号 */
   serialNumber?: boolean | number
 }
 
