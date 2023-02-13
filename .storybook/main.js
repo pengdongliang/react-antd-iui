@@ -1,4 +1,5 @@
 module.exports = {
+  staticDirs: ["../src/stories/assets"],
   stories: [
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)',
@@ -7,6 +8,13 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-docs',
+      options: {
+        configureJSX: true,
+        transcludeMarkdown: true,
+      },
+    },
   ],
   framework: '@storybook/react',
   typescript: {

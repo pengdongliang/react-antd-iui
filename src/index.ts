@@ -1,7 +1,7 @@
 export { ITable, ItableContext, IForm } from './components'
 export type {
   IFormItemType,
-  useTableFormType,
+  UseTableFormType,
   IFormPropsType,
   IFormRefType,
   ItableContextType,

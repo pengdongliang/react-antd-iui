@@ -1,3 +1,4 @@
+import { TablePaginationConfig } from 'antd'
 import { ITableProps } from '../ITable'
 import type { RecordType } from '../types/global'
 
@@ -13,6 +14,8 @@ export interface UseSimpleITablePropsType {
   propsDataSource?: RecordType[]
   /** 表格props */
   tableProps?: ITableProps
+  /** props传递过来的分页, 只用到false */
+  paginationProps?: TablePaginationConfig | false
 }
 
 /**
@@ -20,8 +23,13 @@ export interface UseSimpleITablePropsType {
  * @param props
  */
 function useSimpleITable(props: UseSimpleITablePropsType) {
-  const { blockAutoRequestFlag, simpleTableFlag, tableProps, propsDataSource } =
-    props
+  const {
+    blockAutoRequestFlag,
+    simpleTableFlag,
+    tableProps,
+    propsDataSource,
+    paginationProps,
+  } = props
   const simpleDataSource =
     blockAutoRequestFlag &&
     simpleTableFlag &&
@@ -29,7 +37,10 @@ function useSimpleITable(props: UseSimpleITablePropsType) {
     propsDataSource.length
       ? propsDataSource
       : tableProps?.dataSource
-  const simplePagination = simpleTableFlag ? false : tableProps?.pagination
+  const simplePagination =
+    simpleTableFlag || paginationProps === false
+      ? false
+      : tableProps?.pagination
   return { dataSource: simpleDataSource, pagination: simplePagination }
 }
 

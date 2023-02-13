@@ -1,0 +1,13 @@
+<link rel="shortcut icon" href="../src/stories/assets/favicon.ico">
+<script>
+  var observer = new MutationObserver(function(mutations) {
+    if (document.title.match(/Storybook$/)) {
+      document.title = 'React-Antd-IUI'
+    }
+    document.querySelector('.sto-1ngr21r').innerHTML = 'React-Antd-IUI'
+  }).observe(document.querySelector('title'), {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  })
+</script>

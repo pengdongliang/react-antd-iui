@@ -5,6 +5,7 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+    expanded: false // 展开所有参数信息
   },
   backgrounds: {
     default: 'white',

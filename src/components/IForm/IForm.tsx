@@ -24,11 +24,11 @@ export interface IFormItemType {
   [k: string]: any
 }
 
-export interface useTableFormType {
+export interface UseTableFormType {
   // 表单Form的props
   formProps?: FormProps
   // 表单Form.Item配置
-  formItemOptions: IFormItemType[]
+  formItemOptions?: IFormItemType[]
   // 按钮组, 追加到表单按钮后面
   formItemAppendNodes?: React.ReactNode
   // 追加一行元素
@@ -49,7 +49,7 @@ export interface IFormPropsType {
   submit?: () => void
   reset?: () => void
   // 表格使用
-  useTableForm?: useTableFormType
+  useTableForm?: UseTableFormType
   columns?: ColumnsType<RecordType>
 }
 
@@ -73,9 +73,9 @@ const IForm = React.forwardRef((props: IFormPropsType, ref: IFormRefType) => {
     form.setFieldsValue(initParams)
   }, [initParams, form])
 
-  const dynamicFormItemData: useTableFormType = useMemo(() => {
+  const dynamicFormItemData: UseTableFormType = useMemo(() => {
     let arr: IFormItemType[] = []
-    const { formItemOptions } = useTableForm as useTableFormType
+    const { formItemOptions } = useTableForm as UseTableFormType
     if (Array.isArray(formItemOptions) && formItemOptions.length) {
       arr = formItemOptions?.map((i) => {
         return { ...i }

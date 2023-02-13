@@ -68,6 +68,7 @@ function useITableParamsData(
     initParams,
     iTableRequestFields: propsITableRequestFields,
     requestParamsHandler,
+    getTableDataRequestMethod = 'get',
   } = props
   let getTableDataPromise: ITableRequestParamsType | null = null
   const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
@@ -82,7 +83,7 @@ function useITableParamsData(
     ...iTableRequestFields,
     ...propsITableRequestFields,
   }
-  const { get: httpGet } = useFetch()
+  const http = useFetch()
   const [queryParams, setQueryParams] = useState({})
   const [urlSearchParams, setUrlSearchParams] = useState<string>()
 
@@ -108,16 +109,27 @@ function useITableParamsData(
       let urlParams = ''
       Object.entries(paramsData).forEach(([key, value]) => {
         if (value !== undefined && value !== '') {
-          urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(value)}`
+          if (getTableDataRequestMethod === 'get') {
+            urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(value)}`
+          }
           paramsFilted[key] = value
         }
       })
       setQueryParams(paramsFilted)
       setUrlSearchParams(urlParams)
-      const url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
-
+      let url = getTableDataApi
+      let body = {}
+      if (getTableDataRequestMethod === 'get') {
+        url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
+      } else {
+        body = paramsFilted
+      }
       if (isUseHttp) {
-        return httpGet(url).then((res) => {
+        const requestMethod =
+          getTableDataRequestMethod === 'get'
+            ? http[getTableDataRequestMethod](url)
+            : http[getTableDataRequestMethod](url, body)
+        return (requestMethod as Promise<any>).then((res) => {
           const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
           return {
             total: data[totalFieldName],
@@ -125,7 +137,12 @@ function useITableParamsData(
           }
         })
       }
-      return fetch(url)
+      return fetch(url, {
+        method: getTableDataRequestMethod,
+        ...(getTableDataRequestMethod === 'get'
+          ? {}
+          : { body: JSON.stringify(body) }),
+      })
         .then((res) => res.json())
         .then((res) => {
           const data = (dataFieldName ? res[dataFieldName] : res) ?? {}

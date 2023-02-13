@@ -23,7 +23,7 @@ import useITablePaginationConfig from './hooks/useITablePaginationConfig'
 import useSimpleITable from './hooks/useSimpleITable'
 import useDefaultItableConfig from './hooks/useDefaultItableConfig'
 import IForm from '../IForm/index'
-import type { useTableFormType } from '../IForm/index'
+import type { UseTableFormType } from '../IForm/index'
 import useTableColumns from './hooks/useTableColumns'
 import type { UseTableColumnsPropsType } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
@@ -144,7 +144,7 @@ export interface ITableProps extends TableProps<RecordType> {
   /** 是否是简单表格, 不请求数据和分页, 使用传过来的数据 */
   simpleTableFlag?: boolean
   /** 使用搜索栏的表单配置参数 */
-  useTableForm?: useTableFormType
+  useTableForm?: UseTableFormType
   /** 编辑表格的配置参数 */
   editableConfig?: EditableConfigType
   /** 表格请求字段名 */
@@ -161,6 +161,8 @@ export interface ITableProps extends TableProps<RecordType> {
     /** 表单数据 */
     formData: Record<string, unknown>
   }
+  /** 传入getTableDataApi时使用的请求方式, 默认为get请求 */
+  getTableDataRequestMethod?: 'get' | 'post'
 }
 
 /**
@@ -180,6 +182,7 @@ const ITable = React.forwardRef(
       useTableForm,
       editableConfig,
       serialNumber = true,
+      pagination: paginationProps,
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
     const iFormRef: IFormRefType = useRef(null)
@@ -241,6 +244,7 @@ const ITable = React.forwardRef(
       simpleTableFlag,
       tableProps,
       propsDataSource: props?.dataSource as RecordType[],
+      paginationProps,
     })
     /** 默认antd表格配置 */
     const defaultItableConfig = useDefaultItableConfig(props)
