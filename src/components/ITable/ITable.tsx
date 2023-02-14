@@ -24,8 +24,7 @@ import useSimpleITable from './hooks/useSimpleITable'
 import useDefaultItableConfig from './hooks/useDefaultItableConfig'
 import IForm from '../IForm/index'
 import type { UseTableFormType } from '../IForm/index'
-import useTableColumns from './hooks/useTableColumns'
-import type { UseTableColumnsPropsType } from './hooks/useTableColumns'
+import useTableColumns, { ITableColumnTypes } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 import { IFormRefType } from '@/components/IForm/IForm'
@@ -132,7 +131,10 @@ export type ITableRef = React.Ref<
 /**
  * 表格props类型初始
  */
-export interface ITableProps extends TableProps<RecordType> {
+export interface ITableProps<T = RecordType>
+  extends Omit<TableProps<T>, 'columns'> {
+  /** 扩展后的columns */
+  columns?: ITableColumnTypes<T>
   /** useAntd使用的options */
   useAntdTableOptions?: UseAntdTableOptionsType
   /** 初始化分页配置 */
@@ -257,7 +259,7 @@ const ITable = React.forwardRef(
       columns,
       editableConfig,
       serialNumber,
-    } as UseTableColumnsPropsType)
+    })
 
     /** 是否编辑表格 */
     const editableData = useMemo(() => {

@@ -16,6 +16,9 @@ export type {
   ITableRequestParamsType,
   ITableRequestFieldsType,
   UseITableParamsDataResultType,
+  EditableType,
+  ITableColumnTypes,
+  ITableColumnObjTypes,
 } from './ITable'
 
 export { default as IForm } from './IForm'

@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Tooltip } from 'antd'
 import type { TooltipProps } from 'antd'
-import type {
-  ITableProps,
-  EditableConfigType,
-  EditArgumentsType,
-} from '../ITable'
+import { ColumnGroupType, ColumnType } from 'antd/es/table/interface'
+import { FormItemProps } from 'antd/es/form/FormItem'
+import { FormProps } from 'antd/es/form'
+import type { EditableConfigType, EditArgumentsType } from '../ITable'
 import EditableRow from '../components/EditableRow'
 import EditableCell from '../components/EditableCell'
 import type { RecordType } from '../types/global'
@@ -22,17 +21,23 @@ export type EditableType =
 /**
  * ITable表格columns属性类型
  */
-export type ITableColumnTypes = (Exclude<
-  ITableProps['columns'],
-  undefined
->[number] & {
+export interface ITableColumnObjTypes<T = RecordType>
+  extends Partial<ColumnGroupType<T>>,
+    Partial<ColumnType<T>> {
   /** 当前单元格是否可以编辑 */
   editable?: EditableType
-  /** dataIndex */
-  dataIndex?: string
   /** 当前单元格是否可以自定义显示Tooltip */
   tooltip?: boolean | TooltipProps
-})[]
+  /** 编辑行/单元格表单Form配置props */
+  formProps?: FormProps
+  /** 编辑行/单元格表单Item配置props */
+  formItemProps?: FormItemProps
+}
+
+/**
+ * ITable表格columns属性数组类型
+ */
+export type ITableColumnTypes<T = RecordType> = ITableColumnObjTypes<T>[]
 
 /**
  * columns处理钩子props类型
@@ -57,7 +62,7 @@ function useTableColumns(props: UseTableColumnsPropsType): {
   const { columns, editableConfig = {}, serialNumber } = props
   const [hasColumnEditable, setHasColumnEditable] = useState(false)
 
-  const realColumns = useMemo(() => {
+  const realColumns: ITableColumnTypes = useMemo(() => {
     const { onChange, editRowFlag } = editableConfig as Exclude<
       EditableConfigType,
       boolean

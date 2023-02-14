@@ -20,6 +20,9 @@ export type {
   ITableRequestParamsType,
   ITableRequestFieldsType,
   UseITableParamsDataResultType,
+  EditableType,
+  ITableColumnTypes,
+  ITableColumnObjTypes,
 } from './components'
 
 export type {
@@ -33,3 +36,13 @@ export type {
 
 export { default as ConfigProvider } from './configProvider'
 export type { configContextType, ConfigProviderProps } from './configProvider'
+export { useExport, useTableDelete, useRequest } from './hooks'
+export type {
+  UseExportProps,
+  DeleteHandlerArgs,
+  UseTableDeleteProps,
+  IRequestProps,
+  UseRequestProps,
+  ResponseHandlerType,
+  RunHandlerArgs,
+} from './hooks'

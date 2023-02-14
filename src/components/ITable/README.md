@@ -40,10 +40,12 @@
 
 #### **columns**
 
-| 参数       | 说明                    | 类型                       | 默认值 |
-|----------|-----------------------|--------------------------|-----|
-| editable | 当前单元格是否可以编辑           | `EditableType`           | -   |
-| tooltip  | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -   |
+| 参数            | 说明                    | 类型                       | 默认值 |
+|---------------|-----------------------|--------------------------|-----|
+| editable      | 当前单元格是否可以编辑           | `EditableType`           | -   |
+| tooltip       | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -   |
+| formProps     | 编辑行/单元格表单Form配置props  | `FormProps`              | -   |
+| formItemProps | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -   |
 
 #### **useTableForm**
 
@@ -76,6 +78,7 @@
 | isUseHttp           | 是否使用 `use-http` 请求, 否则使用 `fetch` | `boolean`                 | `true`                                                                                  |
 | iTableRequestFields | 表格请求字段名                          | `ITableRequestFieldsType` | `{ current: 'page', pageSize: 'limit', total: 'total', records: 'list', data: 'data' }` |
 | antdContextOptions  | antd表格全局配置项, **注意上下文顺序**         | `AntdConfigProviderProps` | -                                                                                       |
+| responseHandler     | useRequest请求响应后的操作               | `ResponseHandlerType`     | -                                                                                       |
 
 ### 使用示例
 

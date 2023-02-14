@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react'
+import React, { HTMLAttributes, useMemo } from 'react'
 import { Form } from 'antd'
 import { FormInstance } from 'antd/es/form'
+import { ITableColumnObjTypes } from '@/components/ITable/hooks/useTableColumns'
 
 export type EditableContextType = {
   form?: FormInstance<any>
@@ -8,20 +9,24 @@ export type EditableContextType = {
 
 export const EditableContext = React.createContext<EditableContextType>({})
 
-interface EditableRowPropsType {
+interface EditableRowPropsType extends ITableColumnObjTypes {
   index: number
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EditableRow: React.FC<EditableRowPropsType> = ({ index, ...props }) => {
+  const { formProps, ...restProps } = props
   const [form] = Form.useForm()
-
   const rowContext: EditableContextType = useMemo(() => ({ form }), [form])
+  const filterProps = {
+    ...restProps,
+    title: '',
+    render: '',
+  } as HTMLAttributes<any>
 
   return (
-    <Form form={form} component={false}>
+    <Form {...formProps} form={form} component={false}>
       <EditableContext.Provider value={rowContext}>
-        <tr {...props} />
+        <tr {...filterProps} />
       </EditableContext.Provider>
     </Form>
   )

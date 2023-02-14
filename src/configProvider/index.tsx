@@ -3,14 +3,17 @@ import { ConfigProvider as AntdConfigProvider } from 'antd'
 import { ConfigProviderProps as AntdConfigProviderProps } from 'antd/es/config-provider'
 import { defaultITableRequestFields } from '@/components/ITable/hooks/useITableParamsData'
 import type { ITableRequestFieldsType } from '@/components/ITable/hooks/useITableParamsData'
+import { ResponseHandlerType } from '@/hooks/useRequest'
 
 export interface configContextType {
-  // 是否使用use-http请求
+  /** 是否使用use-http请求 */
   isUseHttp?: boolean
-  // 表格请求字段名
+  /** 表格请求字段名 */
   iTableRequestFields?: ITableRequestFieldsType
-  // antd表格全局配置项
+  /** antd表格全局配置项 */
   antdContextOptions?: AntdConfigProviderProps
+  /** useRequest请求响应后的操作 */
+  responseHandler?: ResponseHandlerType
 }
 
 export const ConfigContext = React.createContext<configContextType>({})
@@ -20,14 +23,21 @@ export interface ConfigProviderProps extends configContextType {
 }
 
 const ConfigProvider: React.FC<ConfigProviderProps> = (props) => {
-  const { children, isUseHttp, iTableRequestFields, antdContextOptions } = props
+  const {
+    children,
+    isUseHttp,
+    iTableRequestFields,
+    antdContextOptions,
+    responseHandler,
+  } = props
   const configContextData = useMemo(
     () => ({
       isUseHttp: isUseHttp ?? true,
       iTableRequestFields: iTableRequestFields ?? defaultITableRequestFields,
       antdContextOptions,
+      responseHandler,
     }),
-    [isUseHttp, iTableRequestFields, antdContextOptions]
+    [isUseHttp, iTableRequestFields, antdContextOptions, responseHandler]
   )
 
   return (

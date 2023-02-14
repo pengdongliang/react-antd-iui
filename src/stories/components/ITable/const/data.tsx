@@ -1,6 +1,6 @@
 import { Typography } from 'antd'
 import type { FixedType } from 'rc-table/lib/interface'
-import { RecordType } from '@/index'
+import { ITableProps, RecordType } from '@/index'
 
 export const tableData = [
   {
@@ -221,7 +221,7 @@ export const tableData = [
   },
 ]
 
-export const columns = [
+export const columns: ITableProps['columns'] = [
   // 注意：每个column设置宽度，在scroll: {x: "100%"}里是正常显示的
   {
     title: 'name',
@@ -233,7 +233,9 @@ export const columns = [
     title: 'email',
     dataIndex: 'email',
     width: 100,
-    rules: [{ required: true, message: '请输入邮箱' }],
+    formItemProps: {
+      rules: [{ required: true, message: '请输入邮箱' }],
+    },
     tooltip: { placement: 'topRight' },
     render: (v: string) => (
       <div

@@ -10,12 +10,15 @@ import React, {
 import { Divider, Form, Input, InputRef, Space, Typography } from 'antd'
 import { EditableContext } from './EditableRow'
 import type { EditableContextType } from './EditableRow'
-import type { EditableType } from '../hooks/useTableColumns'
+import type {
+  EditableType,
+  ITableColumnObjTypes,
+} from '../hooks/useTableColumns'
 import { ItableContext } from '../ITable'
 import type { ItableContextType } from '../ITable'
 import type { RecordType } from '../types/global'
 
-interface EditableCellPropsType {
+interface EditableCellPropsType extends Omit<ITableColumnObjTypes, 'children'> {
   editable: EditableType
   children: React.ReactNode
   dataIndex: keyof RecordType
@@ -33,6 +36,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
   changeHandler,
   editRowFlag,
   rowIndex,
+  formItemProps,
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false)
@@ -47,6 +51,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     rowKey ? (record ?? {})[rowKey as string] : ''
   }`
   const realEditingKeyRowFlag = realRowKey === editingRowKey
+  const colKey = `${realRowKey}-${rowIndex}-${dataIndex}`
 
   useEffect(() => {
     if (!editRowFlag && editing) {
@@ -120,7 +125,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
                 ?.onClick
               if (typeof columnOnClick === 'function') columnOnClick(...params)
             },
-            key: `${rowKey}-${dataIndex}`,
+            key: colKey,
           }
         )
       : child
@@ -162,7 +167,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
           }
       const inputProps = editRowFlag ? {} : { onBlur: save }
       return realEditingKeyRowFlag || editing ? (
-        <Form.Item {...restProps} style={{ margin: 0 }} name={dataIndex}>
+        <Form.Item {...formItemProps} style={{ margin: 0 }} name={dataIndex}>
           <Input {...inputProps} ref={inputRef} onPressEnter={save} />
         </Form.Item>
       ) : (
@@ -180,21 +185,18 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     editing,
     realEditingKeyRowFlag,
     record,
-    restProps,
+    formItemProps,
     save,
     toggleEdit,
   ])
 
   const filterProps = {
+    ...restProps,
     title: '',
     render: '',
-    key: `${rowKey}-${dataIndex}`,
+    key: colKey,
   } as HTMLAttributes<any>
 
-  return (
-    <td {...restProps} {...filterProps}>
-      {childNode}
-    </td>
-  )
+  return <td {...filterProps}>{childNode}</td>
 }
 export default EditableCell

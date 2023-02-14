@@ -20,4 +20,8 @@ export type {
   ITableRequestFieldsType,
   UseITableParamsDataResultType,
 } from './hooks/useITableParamsData'
-export type { EditableType, ITableColumnTypes } from './hooks/useTableColumns'
+export type {
+  EditableType,
+  ITableColumnTypes,
+  ITableColumnObjTypes,
+} from './hooks/useTableColumns'
