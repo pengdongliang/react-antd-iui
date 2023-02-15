@@ -2,8 +2,8 @@ import { resolve } from 'path'
 
 export default {
   // cssModules: true, // 默认是 .module.css 走 css modules，.css 不走 css modules。配置 cssModules 为 true 后，全部 css 文件都走 css modules。（less 文件同理）
-  cjs: { output: 'lib', ignores: ['src/stories/**', 'src/utils/**'] },
-  esm: { output: 'es', ignores: ['src/stories/**', 'src/utils/**'] },
+  cjs: { output: 'lib', ignores: ['src/stories/**'] },
+  esm: { output: 'es', ignores: ['src/stories/**'] },
   umd: {
     output: 'dist',
     // extraBabelPlugins: [ // antd5以下可能需要开启
