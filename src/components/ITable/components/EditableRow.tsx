@@ -17,10 +17,13 @@ const EditableRow: React.FC<EditableRowPropsType> = ({ index, ...props }) => {
   const { formProps, ...restProps } = props
   const [form] = Form.useForm()
   const rowContext: EditableContextType = useMemo(() => ({ form }), [form])
+  delete restProps.sortFieldsName
+  delete restProps.sortDirections
   const filterProps = {
     ...restProps,
     title: '',
     render: '',
+    sorter: '',
   } as HTMLAttributes<any>
 
   return (

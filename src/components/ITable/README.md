@@ -40,12 +40,13 @@
 
 #### **columns**
 
-| 参数            | 说明                    | 类型                       | 默认值 |
-|---------------|-----------------------|--------------------------|-----|
-| editable      | 当前单元格是否可以编辑           | `EditableType`           | -   |
-| tooltip       | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -   |
-| formProps     | 编辑行/单元格表单Form配置props  | `FormProps`              | -   |
-| formItemProps | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -   |
+| 参数             | 说明                    | 类型                       | 默认值                   |
+|----------------|-----------------------|--------------------------|-----------------------|
+| editable       | 当前单元格是否可以编辑           | `EditableType`           | -                     |
+| tooltip        | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -                     |
+| formProps      | 编辑行/单元格表单Form配置props  | `FormProps`              | -                     |
+| formItemProps  | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -                     |
+| sortFieldsName | 排序请求字段                | `[string, string]`       | `[order, orderField]` |
 
 #### **useTableForm**
 
@@ -123,4 +124,4 @@ initParams = { initParams }
 | 参数                      | 说明         | 类型                       | 默认值                                                                     |
 |-------------------------|------------|--------------------------|-------------------------------------------------------------------------|
 | defaultPaginationConfig | 基础分页配置     | `PaginationConfigType`   | `{current: 1,pageSize: 10,total: 0,pageSizeOptions: [10, 20, 50, 100]}` |
-| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | `{rowKey: 'id', scroll: { x: '100%' } }`                                |
+| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | `{rowKey: 'id', scroll: { x: '100%' }, tableLayout: 'fixed' }`          |

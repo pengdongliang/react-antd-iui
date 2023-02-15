@@ -259,12 +259,19 @@ export const columns: ITableProps['columns'] = [
         console.log('editRecord', record)
       },
     },
+    sorter: true,
+    sortDirections: ['descend', 'ascend'],
+    sortFieldsName: ['order11', 'orderField11'],
+    showSorterTooltip: false,
   },
   {
     title: 'gender',
     dataIndex: 'gender',
     width: 150,
     editable: true,
+    sorter: true,
+    sortDirections: ['ascend', 'descend'],
+    sortFieldsName: ['order', 'orderField'],
   },
   {
     title: '操作',

@@ -22,6 +22,11 @@ export interface ConfigProviderProps extends configContextType {
   children: React.ReactNode
 }
 
+/**
+ * 全局上下文配置
+ * @param props
+ * @constructor
+ */
 const ConfigProvider: React.FC<ConfigProviderProps> = (props) => {
   const {
     children,

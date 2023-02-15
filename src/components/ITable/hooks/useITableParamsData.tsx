@@ -1,10 +1,10 @@
 import { useAntdTable } from 'ahooks'
-import { useFetch } from 'use-http'
 import { useContext, useState } from 'react'
 import { AntdTableResult } from 'ahooks/lib/useAntdTable/types'
 import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
 import { ConfigContext } from '@/configProvider'
+import { useRequest } from '@/index'
 
 /**
  * 表格请求接口方法类型
@@ -13,7 +13,7 @@ export type ITableRequestParamsType = (
   /** 分页数据 */
   pagination: UseAntdTablePaginationType,
   /** 表单数据 */
-  formData: Record<string, unknown>
+  formData: Record<string, any>
 ) => Promise<UseAntdRowItemType>
 
 /**
@@ -71,7 +71,7 @@ function useITableParamsData(
     getTableDataRequestMethod = 'get',
   } = props
   let getTableDataPromise: ITableRequestParamsType | null = null
-  const { isUseHttp, iTableRequestFields } = useContext(ConfigContext)
+  const { iTableRequestFields } = useContext(ConfigContext)
   const {
     current: currentFieldName,
     pageSize: pageSizeFieldName,
@@ -83,7 +83,11 @@ function useITableParamsData(
     ...iTableRequestFields,
     ...propsITableRequestFields,
   }
-  const http = useFetch()
+  const { run } = useRequest({
+    responseHandler: {
+      responseSuccessText: false,
+    },
+  })
   const [queryParams, setQueryParams] = useState({})
   const [urlSearchParams, setUrlSearchParams] = useState<string>()
 
@@ -92,8 +96,22 @@ function useITableParamsData(
   } else if (getTableDataApi) {
     getTableDataPromise = (
       searchParams: UseAntdTablePaginationType,
-      formData: Record<string, unknown>
+      formData: Record<string, any>
     ): Promise<UseAntdRowItemType> => {
+      let extraParams = {}
+      const { order, field, column } = searchParams?.sorter ?? {}
+      if (order && field) {
+        const { sortFieldsName = [], sortDirections } = column ?? {}
+        let sortType = order
+        if (!Array.isArray(sortDirections) || !sortDirections.length) {
+          sortType = order === 'ascend' ? 'asc' : 'desc'
+        }
+        extraParams = {
+          [sortFieldsName[0] ?? 'order']: sortType,
+          [sortFieldsName[1] ?? 'orderField']: field,
+        }
+      }
+
       const { searchParams: realSearchParams, formData: realFormData } =
         typeof requestParamsHandler === 'function'
           ? requestParamsHandler(searchParams, formData)
@@ -103,54 +121,43 @@ function useITableParamsData(
         [currentFieldName]: current,
         [pageSizeFieldName]: pageSize,
         ...initParams,
+        ...extraParams,
         ...realFormData,
       }
-      const paramsFilted = {}
+
+      let body
       let urlParams = ''
       Object.entries(paramsData).forEach(([key, value]) => {
         if (value !== undefined && value !== '') {
           if (getTableDataRequestMethod === 'get') {
-            urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(value)}`
+            urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(
+              String(value)
+            )}`
+          } else {
+            if (!body) {
+              body = {}
+            }
+            body[key] = value
           }
-          paramsFilted[key] = value
         }
       })
-      setQueryParams(paramsFilted)
+      setQueryParams(body)
       setUrlSearchParams(urlParams)
-      let url = getTableDataApi
-      let body = {}
-      if (getTableDataRequestMethod === 'get') {
-        url = getTableDataApi + (urlParams ? `?${urlParams}` : '')
-      } else {
-        body = paramsFilted
-      }
-      if (isUseHttp) {
-        const requestMethod =
-          getTableDataRequestMethod === 'get'
-            ? http[getTableDataRequestMethod](url)
-            : http[getTableDataRequestMethod](url, body)
-        return (requestMethod as Promise<any>).then((res) => {
-          const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
-          return {
-            total: data[totalFieldName],
-            list: data[recordsFieldName],
-          }
-        })
-      }
-      return fetch(url, {
-        method: getTableDataRequestMethod,
-        ...(getTableDataRequestMethod === 'get'
-          ? {}
-          : { body: JSON.stringify(body) }),
+
+      return run({
+        api: getTableDataApi,
+        options: {
+          method: getTableDataRequestMethod,
+          params: paramsData,
+          body,
+        },
+      }).then((res) => {
+        const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
+        return {
+          total: data[totalFieldName],
+          list: data[recordsFieldName],
+        }
       })
-        .then((res) => res.json())
-        .then((res) => {
-          const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
-          return {
-            total: data[totalFieldName],
-            list: data[recordsFieldName],
-          }
-        })
     }
   }
 

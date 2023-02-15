@@ -190,11 +190,14 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     toggleEdit,
   ])
 
+  delete restProps.sortFieldsName
+  delete restProps.sortDirections
   const filterProps = {
+    key: colKey,
     ...restProps,
     title: '',
     render: '',
-    key: colKey,
+    sorter: '',
   } as HTMLAttributes<any>
 
   return <td {...filterProps}>{childNode}</td>

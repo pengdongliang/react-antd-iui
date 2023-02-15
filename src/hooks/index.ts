@@ -8,4 +8,5 @@ export type {
   UseRequestProps,
   ResponseHandlerType,
   RunHandlerArgs,
+  UseRequestOptionsType,
 } from './useRequest'

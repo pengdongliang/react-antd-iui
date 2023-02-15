@@ -4,7 +4,6 @@ import { tableData } from '@/stories/components/ITable/const'
 const ITableSimple = Template.bind({})
 
 ITableSimple.args = {
-  ...Template.args,
   dataSource: tableData,
   simpleTableFlag: true,
   blockAutoRequestFlag: true,

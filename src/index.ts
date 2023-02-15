@@ -45,4 +45,5 @@ export type {
   UseRequestProps,
   ResponseHandlerType,
   RunHandlerArgs,
+  UseRequestOptionsType,
 } from './hooks'

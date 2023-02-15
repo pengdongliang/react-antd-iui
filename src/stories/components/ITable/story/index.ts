@@ -1,2 +1,6 @@
 export { default as ITableSimple } from './ITableSimple'
 export { default as ITableDemos } from './ITableDemos'
+export { default as ITableSorter } from './ITableSorter'
+export { default as ITableEditRow } from './ITableEditRow'
+export { default as ITableEditCol } from './ITableEditCol'
+export { default as ITableExpandable } from './ITableExpandable'

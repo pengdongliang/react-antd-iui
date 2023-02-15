@@ -65,12 +65,13 @@
 
 #### **columns**
 
-| 参数            | 说明                    | 类型                       | 默认值 |
-|---------------|-----------------------|--------------------------|-----|
-| editable      | 当前单元格是否可以编辑           | `EditableType`           | -   |
-| tooltip       | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -   |
-| formProps     | 编辑行/单元格表单Form配置props  | `FormProps`              | -   |
-| formItemProps | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -   |
+| 参数             | 说明                    | 类型                       | 默认值                   |
+|----------------|-----------------------|--------------------------|-----------------------|
+| editable       | 当前单元格是否可以编辑           | `EditableType`           | -                     |
+| tooltip        | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -                     |
+| formProps      | 编辑行/单元格表单Form配置props  | `FormProps`              | -                     |
+| formItemProps  | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -                     |
+| sortFieldsName | 排序请求字段                | `[string, string]`       | `[order, orderField]` |
 
 #### **useTableForm**
 
@@ -148,22 +149,25 @@ initParams = { initParams }
 | 参数                      | 说明         | 类型                       | 默认值                                                                     |
 |-------------------------|------------|--------------------------|-------------------------------------------------------------------------|
 | defaultPaginationConfig | 基础分页配置     | `PaginationConfigType`   | `{current: 1,pageSize: 10,total: 0,pageSizeOptions: [10, 20, 50, 100]}` |
-| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | `{rowKey: 'id', scroll: { x: '100%' } }`                                |
+| defaultTableConfig      | 默认antd表格配置 | `TableProps<RecordType>` | `{rowKey: 'id', scroll: { x: '100%' }, tableLayout: 'fixed' }`          |
 
 ## hooks
 
 ### useRequest
 
-| 参数                                  | 说明                                        | 类型                                             | 默认值  |
-|-------------------------------------|-------------------------------------------|------------------------------------------------|------|
-| api                                 | 请求地址                                      | `string`                                       | -    |
-| options                             | `fetch options` 增加了 `params`, 修改`body`为对象 | `RequestInit & IRequestProps`                  | -    |
-| responseHandler                     | 响应后的操作                                    | `ResponseHandlerType`                          | -    |
-| responseHandler.responseDataHander  | 成功后处理数据方法                                 | `(args?: Record<string, any>) => Promise<any>` | -    |
-| responseHandler.responseSuccessText | 请求成功提示语                                   | `string`                                       | 请求成功 |
-| responseHandler.responseErrorText   | 请求失败提示语                                   | `string`                                       | 请求失败 |
-| 返回 `run`                            | 开始请求方法                                    | `(args: RunHandlerArgs) => Promise<any>`       | -    |
-| 返回 `use-http的所有返回对象`                | use-http的所有返回对象                           | `object`                                       | -    |
+网络请求，使用参考 `Fetch` 和 `use-http` 文档, 支持全局和使用时处理响应结果
+全局上下文配置 `isUseHttp = true` 使用 `use-http` 请求， 否则使用 `Fetch`
+
+| 参数                                  | 说明                                         | 类型                                             | 默认值  |
+|-------------------------------------|--------------------------------------------|------------------------------------------------|------|
+| api                                 | 请求地址                                       | `string`                                       | -    |
+| options                             | `fetch options` 增加了 `params`, 修改`body`为对象  | `RequestInit & IRequestProps`                  | -    |
+| responseHandler                     | 响应后的操作                                     | `ResponseHandlerType`                          | -    |
+| responseHandler.responseDataHandler | 成功后处理数据方法                                  | `(args?: Record<string, any>) => Promise<any>` | -    |
+| responseHandler.responseSuccessText | 请求成功提示语                                    | `string`                                       | 请求成功 |
+| responseHandler.responseErrorText   | 请求失败提示语                                    | `string`                                       | 请求失败 |
+| 返回 `run`                            | 开始请求方法                                     | `(args: RunHandlerArgs) => Promise<any>`       | -    |
+| 返回 `use-http的所有返回对象`                | use-http的所有返回对象, Fetch返回 `run` 和 `loading` | `object`                                       | -    |
 
 ## LICENSE
 

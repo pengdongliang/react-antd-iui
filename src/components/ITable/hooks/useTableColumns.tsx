@@ -32,6 +32,8 @@ export interface ITableColumnObjTypes<T = RecordType>
   formProps?: FormProps
   /** 编辑行/单元格表单Item配置props */
   formItemProps?: FormItemProps
+  /** 排序请求字段 默认为[order, orderField] */
+  sortFieldsName?: [string, string]
 }
 
 /**

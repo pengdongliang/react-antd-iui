@@ -33,4 +33,5 @@ export const defaultPaginationConfig: PaginationConfigType = {
 export const defaultTableConfig: TableProps<RecordType> = {
   rowKey: 'id',
   scroll: { x: '100%' },
+  tableLayout: 'fixed',
 }
