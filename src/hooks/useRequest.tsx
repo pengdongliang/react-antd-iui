@@ -1,5 +1,5 @@
 import useFetch, { ReqMethods } from 'use-http'
-import { useCallback, useContext } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { message } from 'antd'
 import { IncomingOptions } from 'use-http/dist/cjs/types'
 import { ConfigContext } from '@/configProvider'
@@ -72,6 +72,7 @@ export interface UseRequestProps extends Pick<IRequestProps, 'api'> {
 function useRequest(props?: UseRequestProps) {
   const { options = {} } = props ?? {}
   const http = useFetch(options)
+  const [loading, setLoading] = useState(false)
   const { responseHandler: contextResponseHandler, isUseHttp } =
     useContext(ConfigContext)
 
@@ -200,26 +201,30 @@ function useRequest(props?: UseRequestProps) {
           method,
         })
       }
+      setLoading(true)
       return fetch(url, {
         ...(options as RequestInit),
         method,
         ...(body ? { body: JSON.stringify(body) } : {}),
-      }).then(async (res) => {
-        return responseFunc({
-          realResponseHandler,
-          error: undefined,
-          response: res,
-          res: await res[responseType](),
-          responseType,
-          successShowMessage,
-          method,
-        })
       })
+        .then(async (res) => {
+          return responseFunc({
+            realResponseHandler,
+            error: undefined,
+            response: res,
+            res: await res[responseType](),
+            responseType,
+            successShowMessage,
+            method,
+          })
+        })
+        .finally(() => {
+          setLoading(false)
+        })
     },
     [contextResponseHandler, http, isUseHttp, options, props, responseFunc]
   )
-
-  return { ...http, request }
+  return { ...http, request, loading: isUseHttp ? http?.loading : loading }
 }
 
 export default useRequest
