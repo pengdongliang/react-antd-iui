@@ -1,5 +1,5 @@
 import useFetch, { ReqMethods } from 'use-http'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext } from 'react'
 import { message } from 'antd'
 import { IncomingOptions } from 'use-http/dist/cjs/types'
 import { ConfigContext } from '@/configProvider'
@@ -18,18 +18,34 @@ export interface IRequestProps {
 /**
  * 运行处理函数参数类型
  */
-export type RunHandlerArgs = Partial<UseRequestProps>
+export type RequestHandlerArgs = Partial<UseRequestProps>
+
+/**
+ * 响应字段类型 {code, data, msg, successReturn}
+ */
+export interface UseRequestResponseFieldsType {
+  /** 响应code, 默认code */
+  code?: string
+  /** 响应成功后返回的字段, 否则返回整个res, 默认空 */
+  data?: string
+  /** 响应信息, 默认msg */
+  msg?: string
+}
 
 /**
  * 响应后的操作类型
  */
 export interface ResponseHandlerType {
   /** 成功后处理数据方法 */
-  responseDataHandler?: (args?: Record<string, any>) => Promise<any>
+  responseDataHandler?: (res?: Record<string, any>) => Promise<any>
   /** 请求成功提示语 */
   responseSuccessText?: string | false
   /** 请求失败提示语 */
   responseErrorText?: string
+  /** 响应字段 */
+  responseFields?: UseRequestResponseFieldsType
+  /** 响应判断是否成功的方法, 默认['200', 200].includes(code) */
+  successFunc?: (res?: Record<string, any>) => boolean
 }
 
 /** 网络请求options类型 */
@@ -44,6 +60,8 @@ export interface UseRequestProps extends Pick<IRequestProps, 'api'> {
   options?: UseRequestOptionsType
   /** 响应后的操作 */
   responseHandler?: ResponseHandlerType
+  /** 请求成功是否提示, 默认get请求不提示 */
+  successShowMessage?: boolean
 }
 
 /**
@@ -56,119 +74,152 @@ function useRequest(props?: UseRequestProps) {
   const http = useFetch(options)
   const { responseHandler: contextResponseHandler, isUseHttp } =
     useContext(ConfigContext)
-  const [loading, setLoading] = useState(false)
 
-  const responseFunc = ({
-    responseDataHandler,
-    responseSuccessText,
-    responseErrorText,
-    error,
-    response,
-    res,
-    responseType,
-  }) => {
-    return new Promise<Record<string, any>>((resolve, reject) => {
-      if (response.ok) {
-        if (responseType === 'json') {
-          if (typeof responseDataHandler === 'function') {
-            responseDataHandler(res)
-              .then((v) => resolve(v))
-              .catch((e) => reject(e))
-          } else {
-            const { data, code, msg } = res ?? {}
-            if (code) {
-              if (code === '200' || code === 200) {
-                if (responseSuccessText) {
-                  message.success(responseSuccessText)
-                }
-                resolve(data)
-              } else {
-                message.error(msg || responseErrorText)
-                reject(error)
-              }
-            } else if (res) {
-              if (responseSuccessText) {
-                message.success(responseSuccessText)
-              }
-              resolve(res)
-            }
-          }
-        } else {
-          resolve(res)
-        }
-      } else {
-        message.error(error?.message || responseErrorText)
-        reject(error?.message || responseErrorText)
-      }
-    })
+  const defaultSuccessFunc = (res) => {
+    const { code } = res
+    return ['200', 200].includes(code)
   }
 
-  const run = useCallback(
-    async (args?: RunHandlerArgs) => {
-      const realArgs = { ...props, ...args }
-      const {
-        api: runApi,
-        options: runOptions = {},
-        responseHandler,
-      } = realArgs
-      if (!runApi) {
-        throw new Error('请求地址不能为空')
-      }
-      const {
-        responseDataHandler,
-        responseSuccessText = '请求成功',
-        responseErrorText = '请求失败',
-      } = { ...contextResponseHandler, ...responseHandler }
-      const { method = 'get', body, params } = runOptions
-      const { response, error } = http
-      let queryParams = ''
-      Object.entries(params).forEach(([key, value]) => {
-        if (value !== undefined && value !== '') {
-          queryParams += `${queryParams ? '&' : ''}${key}=${encodeURI(value)}`
+  const responseFunc = useCallback(
+    ({
+      realResponseHandler,
+      error,
+      response,
+      res,
+      responseType,
+      successShowMessage,
+      method,
+    }) => {
+      return new Promise<Record<string, any>>((resolve, reject) => {
+        const {
+          responseDataHandler,
+          responseSuccessText = '请求成功',
+          responseErrorText = '请求失败',
+          responseFields,
+          successFunc = defaultSuccessFunc,
+        } = realResponseHandler
+        if (response.ok) {
+          if (responseType === 'json') {
+            if (typeof responseDataHandler === 'function') {
+              responseDataHandler(res)
+                .then((v) => resolve(v))
+                .catch((e) => reject(e))
+            } else {
+              const {
+                code: codeFieldName = 'code',
+                data: dataFieldName,
+                msg: msgFieldName = 'msg',
+              } = responseFields ?? {}
+              if (res) {
+                const code = res[codeFieldName]
+                const data = res[dataFieldName]
+                const msg = res[msgFieldName]
+                if (successFunc({ code, data, msg })) {
+                  if (
+                    !(successShowMessage === undefined && method === 'get') &&
+                    responseSuccessText
+                  ) {
+                    message.success(responseSuccessText)
+                  }
+                  resolve(data ?? res)
+                } else {
+                  if (responseErrorText) message.error(msg || responseErrorText)
+                  reject(error)
+                }
+              } else {
+                if (responseErrorText) message.error(responseErrorText)
+                reject(error)
+              }
+            }
+          } else {
+            resolve(res)
+          }
+        } else {
+          if (error?.message || responseErrorText) {
+            message.error(error?.message || responseErrorText)
+          }
+          reject(error?.message || responseErrorText)
         }
       })
-      const url = (queryParams ? `${runApi}?${queryParams}` : runApi) as string
-      const responseType = (runOptions?.responseType ??
+    },
+    []
+  )
+
+  const request = useCallback(
+    async (args?: RequestHandlerArgs) => {
+      const realArgs = { ...props, ...args }
+      const {
+        api: requestApi,
+        options: requestOptions = {},
+        responseHandler,
+        successShowMessage,
+      } = realArgs
+      if (!requestApi) {
+        throw new Error('请求地址不能为空')
+      }
+      const realResponseHandler = {
+        ...contextResponseHandler,
+        ...responseHandler,
+      }
+      const { method = 'get', body, params } = requestOptions
+      const { response, error } = http
+      let queryParams = ''
+      if (params) {
+        if (
+          Object.prototype.toString
+            .call(params)
+            .match(/^\[object\s(.*)\]$/)[1] === 'Object'
+        ) {
+          Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== '') {
+              queryParams += `${queryParams ? '&' : ''}${key}=${encodeURI(
+                value
+              )}`
+            }
+          })
+        } else if (typeof params === 'string') {
+          queryParams += params
+        }
+      }
+      const url = (
+        queryParams ? `${requestApi}?${queryParams}` : requestApi
+      ) as string
+      const responseType = (requestOptions?.responseType ??
         options?.responseType ??
         'json') as string
       if (isUseHttp) {
         await http[method](url, body)
         const res = await response[responseType]()
         return responseFunc({
-          responseDataHandler,
-          responseSuccessText,
-          responseErrorText,
-          error: undefined,
+          realResponseHandler,
+          error,
           response,
           res,
           responseType,
+          successShowMessage,
+          method,
         })
       }
-      setLoading(true)
       return fetch(url, {
         ...(options as RequestInit),
         method,
         ...(body ? { body: JSON.stringify(body) } : {}),
+      }).then(async (res) => {
+        return responseFunc({
+          realResponseHandler,
+          error: undefined,
+          response: res,
+          res: await res[responseType](),
+          responseType,
+          successShowMessage,
+          method,
+        })
       })
-        .then(async (res) => {
-          return responseFunc({
-            responseDataHandler,
-            responseSuccessText,
-            responseErrorText,
-            error,
-            response: res,
-            res: await res[responseType](),
-            responseType,
-          })
-        })
-        .finally(() => {
-          setLoading(false)
-        })
     },
-    [contextResponseHandler, http, isUseHttp, options, props]
+    [contextResponseHandler, http, isUseHttp, options, props, responseFunc]
   )
 
-  return { ...http, run, ...(isUseHttp ? {} : { loading }) }
+  return { ...http, request }
 }
 
 export default useRequest

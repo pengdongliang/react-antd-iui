@@ -83,7 +83,7 @@ function useITableParamsData(
     ...iTableRequestFields,
     ...propsITableRequestFields,
   }
-  const { run } = useRequest({
+  const { request } = useRequest({
     responseHandler: {
       responseSuccessText: false,
     },
@@ -144,7 +144,7 @@ function useITableParamsData(
       setQueryParams(body)
       setUrlSearchParams(urlParams)
 
-      return run({
+      return request({
         api: getTableDataApi,
         options: {
           method: getTableDataRequestMethod,

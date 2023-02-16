@@ -44,6 +44,7 @@ export type {
   IRequestProps,
   UseRequestProps,
   ResponseHandlerType,
-  RunHandlerArgs,
+  RequestHandlerArgs,
   UseRequestOptionsType,
+  UseRequestResponseFieldsType,
 } from './hooks'
