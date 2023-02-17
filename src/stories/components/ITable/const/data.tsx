@@ -1,5 +1,4 @@
 import { Typography } from 'antd'
-import type { FixedType } from 'rc-table/lib/interface'
 import { ITableProps, RecordType } from '@/index'
 
 export const tableData = [
@@ -277,7 +276,7 @@ export const columns: ITableProps['columns'] = [
     title: '操作',
     dataIndex: 'opt',
     width: 150,
-    fixed: 'right' as FixedType,
+    fixed: 'right',
     render: () => {
       return [<Typography.Link>查看</Typography.Link>]
     },

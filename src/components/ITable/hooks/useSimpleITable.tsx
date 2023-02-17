@@ -1,5 +1,4 @@
-import { TablePaginationConfig } from 'antd'
-import { ITableProps } from '../ITable'
+import { ITableProps, ITablePropsEitherOr } from '../ITable'
 import type { RecordType } from '../types/global'
 
 /**
@@ -15,7 +14,7 @@ export interface UseSimpleITablePropsType {
   /** 表格props */
   tableProps?: ITableProps
   /** props传递过来的分页, 只用到false */
-  paginationProps?: TablePaginationConfig | false
+  paginationProps?: ITablePropsEitherOr['pagination']
 }
 
 /**
@@ -37,10 +36,19 @@ function useSimpleITable(props: UseSimpleITablePropsType) {
     propsDataSource.length
       ? propsDataSource
       : tableProps?.dataSource
-  const simplePagination =
+  const simplePagination: UseSimpleITablePropsType['paginationProps'] =
     simpleTableFlag || paginationProps === false
       ? false
-      : tableProps?.pagination
+      : {
+          showQuickJumper: true,
+          showTotal: (total, range) => `共${total}页`,
+          ...(Object.prototype.toString
+            .call(paginationProps)
+            .match(/^\[object\s(.*)\]$/)[1] === 'Object'
+            ? paginationProps
+            : {}),
+          ...tableProps?.pagination,
+        }
   return { dataSource: simpleDataSource, pagination: simplePagination }
 }
 

@@ -166,7 +166,7 @@ initParams = { initParams }
 | responseHandler.responseDataHandler | 成功后处理数据方法                                  | `(args?: Record<string, any>) => Promise<any>` | -    |
 | responseHandler.responseSuccessText | 请求成功提示语                                    | `string`                                       | 请求成功 |
 | responseHandler.responseErrorText   | 请求失败提示语                                    | `string`                                       | 请求失败 |
-| 返回 `run`                            | 开始请求方法                                     | `(args: RequestHandlerArgs) => Promise<any>`       | -    |
+| 返回 `run`                            | 开始请求方法                                     | `(args: RequestHandlerArgs) => Promise<any>`   | -    |
 | 返回 `use-http的所有返回对象`                | use-http的所有返回对象, Fetch返回 `run` 和 `loading` | `object`                                       | -    |
 
 ## LICENSE

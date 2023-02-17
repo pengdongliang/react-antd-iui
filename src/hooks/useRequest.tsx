@@ -115,7 +115,7 @@ function useRequest(props?: UseRequestProps) {
                 const code = res[codeFieldName]
                 const data = res[dataFieldName]
                 const msg = res[msgFieldName]
-                if (successFunc({ code, data, msg })) {
+                if (successFunc({ ...res, code, data, msg })) {
                   if (
                     !(successShowMessage === undefined && method === 'get') &&
                     responseSuccessText

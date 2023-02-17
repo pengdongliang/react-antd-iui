@@ -1,11 +1,10 @@
 import React, { useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { Button, Col, Form, Input, Row, Select, Space } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
 import type { FormItemProps } from 'antd/es/form/FormItem'
 import type { FormProps } from 'antd/es/form'
 import { FormInstance } from 'antd/lib/form/hooks/useForm'
-import type { InitParamsType } from '../ITable/ITable'
 import type { RecordType } from '../ITable/types/global'
+import { ITableColumnTypes, InitParamsType } from '../index'
 
 const { Option } = Select
 
@@ -50,7 +49,7 @@ export interface IFormPropsType {
   reset?: () => void
   // 表格使用
   useTableForm?: UseTableFormType
-  columns?: ColumnsType<RecordType>
+  columns?: ITableColumnTypes<RecordType>
 }
 
 export type IFormRefType = React.Ref<{
