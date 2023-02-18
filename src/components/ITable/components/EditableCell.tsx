@@ -192,6 +192,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
 
   delete restProps.sortFieldsName
   delete restProps.sortDirections
+  delete restProps.showSorterTooltip
   const filterProps = {
     key: colKey,
     ...restProps,
