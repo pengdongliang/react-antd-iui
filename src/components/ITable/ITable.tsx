@@ -171,8 +171,8 @@ export interface ITableProps<T = RecordType>
   /** 过滤请求参数值, 默认过滤`undefined和""` */
   filterRequestValue?: UseRequestOptionsType['filterRequestValue']
   /** 传入getTableDataApi时使用的自定义请求options */
-  requestOptions?: <TParams>(args: {
-    params: TParams
+  requestOptions?: (args: {
+    params: Record<string, any>
   }) => Partial<UseRequestOptionsType>
   /** 回调方法处理请求返回的数据 */
   responseDataHandler?: <TData, TRes>(data: TData, res: TRes) => TData
