@@ -3,9 +3,9 @@ import { Template } from '@/stories/components/ITable/template'
 const ITableSorter = Template.bind({})
 
 ITableSorter.args = {
-  requestParamsHandler: (searchParams, formData) => {
+  requestParamsHandler: (searchParams, formData, extraParams) => {
     /** 手动排序 */
-    let extraParams = {}
+    let newExtraParams = extraParams
     const { order, field, column } = searchParams?.sorter ?? {}
     if (order && field && field === 'phone') {
       const { sortFieldsName = [], sortDirections } = column ?? {}
@@ -13,14 +13,15 @@ ITableSorter.args = {
       if (!Array.isArray(sortDirections) || !sortDirections.length) {
         sortType = order === 'ascend' ? 'asc' : 'desc'
       }
-      extraParams = {
+      newExtraParams = {
+        ...extraParams,
         [sortFieldsName[0]]: undefined,
         [sortFieldsName[1]]: undefined,
         order22: sortType,
         orderField22: field,
       }
     }
-    return { searchParams, formData: { ...formData, ...extraParams } }
+    return { searchParams, formData: { ...formData, ...newExtraParams } }
   },
 }
 

@@ -50,7 +50,12 @@ export interface ResponseHandlerType {
 
 /** 网络请求options类型 */
 export type UseRequestOptionsType = IncomingOptions &
-  Pick<IRequestProps, 'params' | 'body'>
+  Pick<IRequestProps, 'params' | 'body'> & {
+    /** 过滤请求参数值, 默认过滤`undefined和""` */
+    filterRequestValue?:
+      | boolean
+      | (<TValue>(key: string, value: TValue) => TValue)
+  }
 
 /**
  * 网络请求props类型
@@ -162,9 +167,14 @@ function useRequest(props?: UseRequestProps) {
         ...contextResponseHandler,
         ...responseHandler,
       }
-      const { method = 'get', body, params } = requestOptions
+      const {
+        method = 'get',
+        body,
+        params,
+        filterRequestValue,
+      } = requestOptions
       const { response, error } = http
-      let queryParams = ''
+      let newParamsData = new URLSearchParams()
       if (params) {
         if (
           Object.prototype.toString
@@ -172,16 +182,29 @@ function useRequest(props?: UseRequestProps) {
             .match(/^\[object\s(.*)\]$/)[1] === 'Object'
         ) {
           Object.entries(params).forEach(([key, value]) => {
-            if (value !== undefined && value !== '') {
-              queryParams += `${queryParams ? '&' : ''}${key}=${encodeURI(
-                value
-              )}`
+            let newValue
+            if (typeof filterRequestValue === 'boolean') {
+              if (filterRequestValue) {
+                if (value !== undefined && value !== '') {
+                  newValue = value
+                }
+              } else {
+                newValue = value
+              }
+            } else if (typeof filterRequestValue === 'function') {
+              newValue = filterRequestValue(key, value)
+            } else {
+              newValue = value
+            }
+            if (newValue) {
+              newParamsData.append(key, newValue)
             }
           })
-        } else if (typeof params === 'string') {
-          queryParams += params
+        } else {
+          newParamsData = new URLSearchParams(params)
         }
       }
+      const queryParams = newParamsData.toString()
       const url = (
         queryParams ? `${requestApi}?${queryParams}` : requestApi
       ) as string

@@ -19,6 +19,7 @@ export type {
   EditableType,
   ITableColumnTypes,
   ITableColumnObjTypes,
+  SortConfigType,
 } from './ITable'
 
 export { default as IForm } from './IForm'

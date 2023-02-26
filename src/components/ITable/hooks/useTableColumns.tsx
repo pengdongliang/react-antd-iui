@@ -9,6 +9,14 @@ import EditableRow from '../components/EditableRow'
 import EditableCell from '../components/EditableCell'
 import type { RecordType } from '../types/global'
 
+/** 排序配置 */
+export interface SortConfigType {
+  /** 排序请求字段 默认为[order, orderField] */
+  sortFieldsName?: [string, string]
+  /** 排序字段的名称, 默认是column的dataIndex */
+  orderFieldName?: 'lowerLine' | 'smallHump' | ((str: string) => string)
+}
+
 /**
  * 编辑类型
  */
@@ -32,8 +40,8 @@ export interface ITableColumnObjTypes<T = RecordType>
   formProps?: FormProps
   /** 编辑行/单元格表单Item配置props */
   formItemProps?: FormItemProps
-  /** 排序请求字段 默认为[order, orderField] */
-  sortFieldsName?: [string, string]
+  /** 排序配置 */
+  sortConfig?: SortConfigType
 }
 
 /**

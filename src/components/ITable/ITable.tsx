@@ -28,6 +28,7 @@ import useTableColumns, { ITableColumnTypes } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 import { IFormRefType } from '@/components/IForm/IForm'
+import { UseRequestOptionsType } from '@/index'
 
 /**
  * 表格上下文类型
@@ -155,16 +156,26 @@ export interface ITableProps<T = RecordType>
   serialNumber?: boolean | number
   /** 在请求之前额外处理请求参数 */
   requestParamsHandler?: (
+    /** 分页参数 */
     searchParams: UseAntdTablePaginationType,
-    formData: Record<string, unknown>
+    /** 表单参数 */
+    formData: Record<string, unknown>,
+    /** 其它参数, 如: 排序 */
+    extraParams?: Record<string, any>
   ) => {
     /** 分页数据 */
     searchParams: UseAntdTablePaginationType
     /** 表单数据 */
     formData: Record<string, unknown>
   }
-  /** 传入getTableDataApi时使用的请求方式, 默认为get请求 */
-  getTableDataRequestMethod?: 'get' | 'post'
+  /** 过滤请求参数值, 默认过滤`undefined和""` */
+  filterRequestValue?: UseRequestOptionsType['filterRequestValue']
+  /** 传入getTableDataApi时使用的自定义请求options */
+  requestOptions?: <TParams>(args: {
+    params: TParams
+  }) => Partial<UseRequestOptionsType>
+  /** 回调方法处理请求返回的数据 */
+  responseDataHandler?: <TData, TRes>(data: TData, res: TRes) => TData
 }
 
 /**

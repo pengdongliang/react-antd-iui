@@ -259,8 +259,12 @@ export const columns: ITableProps['columns'] = [
       },
     },
     sorter: true,
+    sortConfig: {
+      sortFieldsName: ['order11', 'orderField11'],
+      /** lowerLine || smallHump || (str: string) => string */
+      orderFieldName: (str) => `aaa_${str}`,
+    },
     sortDirections: ['descend', 'ascend'],
-    sortFieldsName: ['order11', 'orderField11'],
     showSorterTooltip: false,
   },
   {
@@ -270,7 +274,9 @@ export const columns: ITableProps['columns'] = [
     editable: true,
     sorter: true,
     sortDirections: ['ascend', 'descend'],
-    sortFieldsName: ['order', 'orderField'],
+    sortConfig: {
+      sortFieldsName: ['order', 'orderField'],
+    },
   },
   {
     title: '操作',

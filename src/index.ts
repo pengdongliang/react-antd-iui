@@ -23,6 +23,7 @@ export type {
   EditableType,
   ITableColumnTypes,
   ITableColumnObjTypes,
+  SortConfigType,
 } from './components'
 
 export type {

@@ -32,3 +32,27 @@ export function exportBlob(data: any, fileName: string) {
   link.click()
   document.body.removeChild(link)
 }
+
+/**
+ * 字符串小驼峰转下划线
+ * @param str {string} 字符串
+ */
+export function smallHumpToLowerLine(str: string): string {
+  let temp = str.replace(/[A-Z]/g, (match) => {
+    return `_${match.toLowerCase()}`
+  })
+  if (temp.slice(0, 1) === '_') {
+    temp = temp.slice(1)
+  }
+  return temp
+}
+
+/**
+ * 字符串下划线转小驼峰
+ * @param str {string} 字符串
+ */
+export function lowerLineToSmallHump(str: string): string {
+  return str.replace(/([^_])_+([^_])/g, ($0, $1, $2) => {
+    return $1 + $2.toUpperCase()
+  })
+}

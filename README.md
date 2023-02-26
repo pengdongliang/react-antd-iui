@@ -65,13 +65,15 @@
 
 #### **columns**
 
-| 参数             | 说明                    | 类型                       | 默认值                   |
-|----------------|-----------------------|--------------------------|-----------------------|
-| editable       | 当前单元格是否可以编辑           | `EditableType`           | -                     |
-| tooltip        | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps` | -                     |
-| formProps      | 编辑行/单元格表单Form配置props  | `FormProps`              | -                     |
-| formItemProps  | 编辑行/单元格表单Item配置props  | `FormItemProps`          | -                     |
-| sortFieldsName | 排序请求字段                | `[string, string]`       | `[order, orderField]` |
+| 参数                        | 说明                    | 类型                                                      | 默认值                   |
+|---------------------------|-----------------------|---------------------------------------------------------|-----------------------|
+| editable                  | 当前单元格是否可以编辑           | `EditableType`                                          | -                     |
+| tooltip                   | 当前单元格是否可以自定义显示Tooltip | `boolean`或`TooltipProps`                                | -                     |
+| formProps                 | 编辑行/单元格表单Form配置props  | `FormProps`                                             | -                     |
+| formItemProps             | 编辑行/单元格表单Item配置props  | `FormItemProps`                                         | -                     |
+| sortConfig                | 排序配置                  | `SortConfigType`                                        | -                     |
+| sortConfig.sortFieldsName | 排序请求字段                | `[string, string]`                                      | `[order, orderField]` |
+| sortConfig.orderFieldName | 排序字段的名称               | `'lowerLine' / 'smallHump' / ((str: string) => string)` | `dataIndex`           |
 
 #### **useTableForm**
 

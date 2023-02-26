@@ -9,7 +9,7 @@ export default {
   excludeStories: ['Template', /.*Data$/],
   argTypes: {},
   args: {
-    getTableDataApi: 'https://randomuser.me/api',
+    getTableDataApi: '/api',
     columns,
     iTableRequestFields: {
       records: 'results',
@@ -21,6 +21,9 @@ export default {
     initParams: { results: 10 },
     initPaginationConfig: { current: 1, pageSize: 5 },
     rowKey: (record) => `${JSON.stringify(record?.id)}${record?.email}`,
+    requestOptions: ({ params }) => ({ params }),
+    filterRequestValue: (key, value) => value,
+    responseDataHandler: (data, res) => data,
   },
 } as ComponentMeta<typeof ITable>
 

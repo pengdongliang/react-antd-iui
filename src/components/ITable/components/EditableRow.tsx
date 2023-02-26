@@ -17,7 +17,7 @@ const EditableRow: React.FC<EditableRowPropsType> = ({ index, ...props }) => {
   const { formProps, ...restProps } = props
   const [form] = Form.useForm()
   const rowContext: EditableContextType = useMemo(() => ({ form }), [form])
-  delete restProps.sortFieldsName
+  delete restProps.sortConfig
   delete restProps.sortDirections
   delete restProps.showSorterTooltip
   const filterProps = {

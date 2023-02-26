@@ -5,6 +5,7 @@ import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
 import { ConfigContext } from '@/configProvider'
 import { useRequest } from '@/index'
+import { lowerLineToSmallHump, smallHumpToLowerLine } from '@/utils'
 
 /**
  * 表格请求接口方法类型
@@ -68,7 +69,9 @@ function useITableParamsData(
     initParams,
     iTableRequestFields: propsITableRequestFields,
     requestParamsHandler,
-    getTableDataRequestMethod = 'get',
+    requestOptions,
+    filterRequestValue = true,
+    responseDataHandler,
   } = props
   let getTableDataPromise: ITableRequestParamsType | null = null
   const { iTableRequestFields } = useContext(ConfigContext)
@@ -100,21 +103,39 @@ function useITableParamsData(
     ): Promise<UseAntdRowItemType> => {
       let extraParams = {}
       const { order, field, column } = searchParams?.sorter ?? {}
+
       if (order && field) {
-        const { sortFieldsName = [], sortDirections } = column ?? {}
+        const { sortConfig, sortDirections } = column ?? {}
+        const { sortFieldsName = [], orderFieldName } = sortConfig ?? {}
         let sortType = order
         if (!Array.isArray(sortDirections) || !sortDirections.length) {
           sortType = order === 'ascend' ? 'asc' : 'desc'
         }
+        let fieldName = field
+        try {
+          if (orderFieldName) {
+            if (typeof orderFieldName === 'function') {
+              fieldName = orderFieldName(field)
+            } else {
+              fieldName =
+                orderFieldName === 'lowerLine'
+                  ? smallHumpToLowerLine(field)
+                  : lowerLineToSmallHump(field)
+            }
+          }
+        } catch (err) {
+          fieldName = field
+          throw new Error(err as string)
+        }
         extraParams = {
           [sortFieldsName[0] ?? 'order']: sortType,
-          [sortFieldsName[1] ?? 'orderField']: field,
+          [sortFieldsName[1] ?? 'orderField']: fieldName,
         }
       }
 
       const { searchParams: realSearchParams, formData: realFormData } =
         typeof requestParamsHandler === 'function'
-          ? requestParamsHandler(searchParams, formData)
+          ? requestParamsHandler(searchParams, formData, extraParams)
           : { searchParams, formData }
       const { current, pageSize } = realSearchParams ?? {}
       const paramsData = {
@@ -125,34 +146,48 @@ function useITableParamsData(
         ...realFormData,
       }
 
-      let body
-      let urlParams = ''
+      const newParamsData = {}
       Object.entries(paramsData).forEach(([key, value]) => {
-        if (value !== undefined && value !== '') {
-          if (getTableDataRequestMethod === 'get') {
-            urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(
-              String(value)
-            )}`
-          } else {
-            if (!body) {
-              body = {}
+        let newValue
+        if (typeof filterRequestValue === 'boolean') {
+          if (filterRequestValue) {
+            if (value !== undefined && value !== '') {
+              newValue = value
             }
-            body[key] = value
+          } else {
+            newValue = value
           }
+        } else if (typeof filterRequestValue === 'function') {
+          newValue = filterRequestValue(key, value)
+        } else {
+          newValue = value
         }
+        if (newValue) newParamsData[key] = newValue
       })
-      setQueryParams(body)
-      setUrlSearchParams(urlParams)
+      setQueryParams(newParamsData)
+      setUrlSearchParams(new URLSearchParams(newParamsData).toString())
+
+      const {
+        method = 'get',
+        params,
+        body,
+      } = typeof requestOptions === 'function'
+        ? requestOptions<typeof paramsData>({ params: paramsData })
+        : { params: paramsData, body: undefined }
 
       return request({
         api: getTableDataApi,
         options: {
-          method: getTableDataRequestMethod,
-          params: paramsData,
+          method,
+          params,
           body,
+          filterRequestValue,
         },
       }).then((res) => {
-        const data = (dataFieldName ? res[dataFieldName] : res) ?? {}
+        let data = (dataFieldName ? res[dataFieldName] : res) ?? {}
+        if (typeof responseDataHandler === 'function') {
+          data = responseDataHandler<typeof data, typeof res>(data, res)
+        }
         return {
           total: data[totalFieldName],
           list: data[recordsFieldName],

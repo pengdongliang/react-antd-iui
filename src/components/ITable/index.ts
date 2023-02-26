@@ -24,4 +24,5 @@ export type {
   EditableType,
   ITableColumnTypes,
   ITableColumnObjTypes,
+  SortConfigType,
 } from './hooks/useTableColumns'

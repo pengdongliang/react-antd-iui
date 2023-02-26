@@ -190,7 +190,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     toggleEdit,
   ])
 
-  delete restProps.sortFieldsName
+  delete restProps.sortConfig
   delete restProps.sortDirections
   delete restProps.showSorterTooltip
   const filterProps = {
