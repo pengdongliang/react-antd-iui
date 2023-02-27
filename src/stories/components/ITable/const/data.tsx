@@ -236,17 +236,6 @@ export const columns: ITableProps['columns'] = [
       rules: [{ required: true, message: '请输入邮箱' }],
     },
     tooltip: { placement: 'topRight' },
-    render: (v: string) => (
-      <div
-        style={{
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {v}
-      </div>
-    ),
   },
   {
     title: 'phone',
@@ -258,6 +247,7 @@ export const columns: ITableProps['columns'] = [
         console.log('editRecord', record)
       },
     },
+    align: 'center',
     sorter: true,
     sortConfig: {
       sortFieldsName: ['order11', 'orderField11'],

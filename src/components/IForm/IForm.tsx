@@ -1,10 +1,11 @@
 import React, { useEffect, useImperativeHandle, useMemo, useState } from 'react'
-import { Button, Col, Form, Input, Row, Select, Space } from 'antd'
+import { Button, Col, Form, Row, Select, Space } from 'antd'
 import type { FormItemProps } from 'antd/es/form/FormItem'
 import type { FormProps } from 'antd/es/form'
 import { FormInstance } from 'antd/lib/form/hooks/useForm'
 import type { RecordType } from '../ITable/types/global'
 import { ITableColumnTypes, InitParamsType } from '../index'
+import { IInput } from '@/components'
 
 const { Option } = Select
 
@@ -43,22 +44,24 @@ export interface UseTableFormType {
   [k: string]: any
 }
 
-export interface IFormPropsType {
+export interface IFormProps {
   initParams?: InitParamsType
   submit?: () => void
   reset?: () => void
   // 表格使用
   useTableForm?: UseTableFormType
   columns?: ITableColumnTypes<RecordType>
+  /** 禁用表单 */
+  disabled?: boolean
 }
 
-export type IFormRefType = React.Ref<{
+export type IFormRef = React.Ref<{
   formRef: FormInstance
 }>
 
-const IForm = React.forwardRef((props: IFormPropsType, ref: IFormRefType) => {
+const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
   const [form] = Form.useForm()
-  const { submit, reset, initParams, useTableForm } = props
+  const { submit, reset, initParams, useTableForm, disabled } = props
 
   const formRef = useMemo(() => form, [form])
   useImperativeHandle(ref, () => ({
@@ -93,7 +96,7 @@ const IForm = React.forwardRef((props: IFormPropsType, ref: IFormRefType) => {
       switch (itemName) {
         case 'input':
           itemNode = (
-            <Input onPressEnter={submit} allowClear {...i?.itemProps} />
+            <IInput onPressEnter={submit} allowClear {...i?.itemProps} />
           )
           break
         case 'select':
@@ -139,6 +142,7 @@ const IForm = React.forwardRef((props: IFormPropsType, ref: IFormRefType) => {
 
   return (
     <Form
+      disabled={disabled}
       {...useTableForm?.formProps}
       form={form}
       initialValues={initialValues}

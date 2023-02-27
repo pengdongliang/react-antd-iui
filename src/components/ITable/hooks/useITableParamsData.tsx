@@ -172,7 +172,7 @@ function useITableParamsData(
         params,
         body,
       } = typeof requestOptions === 'function'
-        ? requestOptions<typeof paramsData>({ params: paramsData })
+        ? requestOptions({ params: paramsData })
         : { params: paramsData, body: undefined }
 
       return request({

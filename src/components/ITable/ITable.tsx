@@ -27,7 +27,7 @@ import type { UseTableFormType } from '../IForm/index'
 import useTableColumns, { ITableColumnTypes } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
-import { IFormRefType } from '@/components/IForm/IForm'
+import { IFormRef } from '@/components/IForm/IForm'
 import { UseRequestOptionsType } from '@/index'
 
 /**
@@ -176,6 +176,8 @@ export interface ITableProps<T = RecordType>
   }) => Partial<UseRequestOptionsType>
   /** 回调方法处理请求返回的数据 */
   responseDataHandler?: <TData, TRes>(data: TData, res: TRes) => TData
+  /** 禁用内置的表单和按钮 */
+  disabled?: boolean
 }
 
 /**
@@ -196,9 +198,10 @@ const ITable = React.forwardRef(
       editableConfig,
       serialNumber = true,
       pagination: paginationProps,
+      disabled,
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
-    const iFormRef: IFormRefType = useRef(null)
+    const iFormRef: IFormRef = useRef(null)
     /** 分页 */
     const { paginationConfig } = useITablePaginationConfig(initPaginationConfig)
     /** 数据处理 */
@@ -247,6 +250,11 @@ const ITable = React.forwardRef(
           : useSimpleITableData?.dataSource,
     }))
 
+    const realDisabled = useMemo(
+      () => disabled || usetableParamsData?.loading,
+      [disabled, usetableParamsData?.loading]
+    )
+
     useUpdateEffect(() => {
       if (blockAutoRequestFlag === 'auto') run(initParams)
     }, [initParams])
@@ -266,20 +274,21 @@ const ITable = React.forwardRef(
     if (typeof rowKey === 'function') rowKey = ''
 
     /** 处理表格columns */
-    const { realColumns, components } = useTableColumns({
+    const { realColumns, components, hasColumnEditable } = useTableColumns({
       columns,
       editableConfig,
       serialNumber,
+      disabled: realDisabled,
     })
 
     /** 是否编辑表格 */
     const editableData = useMemo(() => {
-      if (!editableConfig) return {}
+      if (!editableConfig && !hasColumnEditable) return {}
       return {
         components,
         rowClassName: () => 'itable-editable-row',
       }
-    }, [editableConfig, components])
+    }, [editableConfig, components, hasColumnEditable])
 
     const ItableContextData: ItableContextType = useMemo(
       () => ({
@@ -300,6 +309,7 @@ const ITable = React.forwardRef(
               initParams={initParams}
               useTableForm={useTableForm}
               columns={columns}
+              disabled={realDisabled}
               ref={iFormRef}
             />
           ) : null}

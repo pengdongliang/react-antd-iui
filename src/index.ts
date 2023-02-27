@@ -1,9 +1,9 @@
-export { ITable, ItableContext, IForm } from './components'
+export { ITable, ItableContext, IForm, IInput } from './components'
 export type {
   IFormItemType,
   UseTableFormType,
-  IFormPropsType,
-  IFormRefType,
+  IFormProps,
+  IFormRef,
   ItableContextType,
   EditArgumentsType,
   EditableConfigType,
@@ -24,6 +24,8 @@ export type {
   ITableColumnTypes,
   ITableColumnObjTypes,
   SortConfigType,
+  IInputProps,
+  IInputRef,
 } from './components'
 
 export type {

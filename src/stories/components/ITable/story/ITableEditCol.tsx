@@ -5,7 +5,7 @@ const ITableEditCol = Template.bind({})
 
 ITableEditCol.args = {
   editableConfig: {
-    editRowFlag: false,
+    // column.editable=true回车或失去焦点会执行onChange
     onChange: (record: Record<string, any>) => {
       // eslint-disable-next-line no-console
       console.log('editOnchange', record)

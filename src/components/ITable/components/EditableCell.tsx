@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { Divider, Form, Input, InputRef, Space, Typography } from 'antd'
+import { Divider, Form, InputRef, Space, Typography } from 'antd'
 import { EditableContext } from './EditableRow'
 import type { EditableContextType } from './EditableRow'
 import type {
@@ -17,6 +17,7 @@ import type {
 import { ItableContext } from '../ITable'
 import type { ItableContextType } from '../ITable'
 import type { RecordType } from '../types/global'
+import { IInput } from '@/components'
 
 interface EditableCellPropsType extends Omit<ITableColumnObjTypes, 'children'> {
   editable: EditableType
@@ -26,6 +27,7 @@ interface EditableCellPropsType extends Omit<ITableColumnObjTypes, 'children'> {
   rowIndex: number
   changeHandler: (record: RecordType) => void
   editRowFlag: boolean
+  disabled?: boolean
 }
 
 const EditableCell: React.FC<EditableCellPropsType> = ({
@@ -37,6 +39,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
   editRowFlag,
   rowIndex,
   formItemProps,
+  disabled,
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false)
@@ -81,6 +84,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
             fieldValue: values[dataIndex],
             fieldName: dataIndex,
             fieldsValue: values,
+            rowIndex,
           })
         }
       } catch (errInfo) {
@@ -89,13 +93,14 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
       }
     },
     [
-      changeHandler,
-      dataIndex,
       form,
+      editRowFlag,
       record,
+      dataIndex,
       setEditingRowKey,
       toggleEdit,
-      editRowFlag,
+      changeHandler,
+      rowIndex,
     ]
   )
 
@@ -141,7 +146,7 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
           </Space>
         ) : (
           <Typography.Link
-            disabled={!!realEditingKeyRowFlag}
+            disabled={disabled || !!realEditingKeyRowFlag}
             onClick={() =>
               edit(record as Partial<RecordType> & { key: React.Key })
             }
@@ -159,16 +164,24 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
       return childrenHOC
     }
     if (editable) {
-      const divProps = editRowFlag
-        ? {}
-        : {
-            onClick: toggleEdit,
-            className: 'itable-editable-cell itable-editable-cell-value-wrap',
-          }
+      const divProps =
+        editRowFlag || disabled
+          ? {}
+          : {
+              onClick: toggleEdit,
+              className: 'itable-editable-cell itable-editable-cell-value-wrap',
+              title: '点击编辑',
+            }
       const inputProps = editRowFlag ? {} : { onBlur: save }
       return realEditingKeyRowFlag || editing ? (
         <Form.Item {...formItemProps} style={{ margin: 0 }} name={dataIndex}>
-          <Input {...inputProps} ref={inputRef} onPressEnter={save} />
+          <IInput
+            {...inputProps}
+            ref={inputRef}
+            onPressEnter={save}
+            style={{ textAlign: restProps?.align }}
+            disabled={disabled}
+          />
         </Form.Item>
       ) : (
         <div {...divProps}>{childrenHOC}</div>
@@ -176,18 +189,20 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     }
     return childrenHOC
   }, [
-    cancel,
-    childrenHOC,
     dataIndex,
-    edit,
-    editRowFlag,
     editable,
-    editing,
+    childrenHOC,
+    editRowFlag,
     realEditingKeyRowFlag,
-    record,
-    formItemProps,
     save,
+    cancel,
+    edit,
+    record,
     toggleEdit,
+    editing,
+    formItemProps,
+    restProps?.align,
+    disabled,
   ])
 
   delete restProps.sortConfig
@@ -201,6 +216,10 @@ const EditableCell: React.FC<EditableCellPropsType> = ({
     sorter: '',
   } as HTMLAttributes<any>
 
-  return <td {...filterProps}>{childNode}</td>
+  return (
+    <td {...filterProps} key={colKey}>
+      {childNode}
+    </td>
+  )
 }
 export default EditableCell
