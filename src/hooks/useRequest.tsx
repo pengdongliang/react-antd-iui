@@ -39,7 +39,7 @@ export interface ResponseHandlerType {
   /** 成功后处理数据方法 */
   responseDataHandler?: (res?: Record<string, any>) => Promise<any>
   /** 请求成功提示语 */
-  responseSuccessText?: string | false
+  responseSuccessText?: string
   /** 请求失败提示语 */
   responseErrorText?: string
   /** 响应字段 */
@@ -60,12 +60,13 @@ export type UseRequestOptionsType = IncomingOptions &
 /**
  * 网络请求props类型
  */
-export interface UseRequestProps extends Pick<IRequestProps, 'api'> {
+export interface UseRequestProps {
+  api?: IRequestProps['api']
   /** fetch options 增加了params, 修改body为对象 */
   options?: UseRequestOptionsType
   /** 响应后的操作 */
   responseHandler?: ResponseHandlerType
-  /** 请求成功是否提示, 默认get请求不提示 */
+  /** 请求成功是否提示, 默认true */
   successShowMessage?: boolean
 }
 
@@ -74,8 +75,8 @@ export interface UseRequestProps extends Pick<IRequestProps, 'api'> {
  * 全局上下文配置 `isUseHttp = true` 使用 `use-http` 请求， 否则使用 `Fetch`
  * @param props
  */
-function useRequest(props?: UseRequestProps) {
-  const { options = {} } = props ?? {}
+function useRequest(props?: string | UseRequestProps) {
+  const { options = {} } = typeof props === 'string' ? {} : props ?? {}
   const http = useFetch(options)
   const [loading, setLoading] = useState(false)
   const { responseHandler: contextResponseHandler, isUseHttp } =
@@ -93,7 +94,7 @@ function useRequest(props?: UseRequestProps) {
       response,
       res,
       responseType,
-      successShowMessage,
+      successShowMessage = true,
       method,
     }) => {
       return new Promise<Record<string, any>>((resolve, reject) => {
@@ -121,10 +122,7 @@ function useRequest(props?: UseRequestProps) {
                 const data = res[dataFieldName]
                 const msg = res[msgFieldName]
                 if (successFunc({ ...res, code, data, msg })) {
-                  if (
-                    !(successShowMessage === undefined && method === 'get') &&
-                    responseSuccessText
-                  ) {
+                  if (successShowMessage && responseSuccessText) {
                     message.success(responseSuccessText)
                   }
                   resolve(data ?? res)
@@ -152,8 +150,11 @@ function useRequest(props?: UseRequestProps) {
   )
 
   const request = useCallback(
-    async (args?: RequestHandlerArgs) => {
-      const realArgs = { ...props, ...args }
+    async (args?: string | RequestHandlerArgs) => {
+      const realArgs = {
+        ...(typeof props === 'string' ? { api: props } : props),
+        ...(typeof args === 'string' ? { api: args } : args),
+      }
       const {
         api: requestApi,
         options: requestOptions = {},

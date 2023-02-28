@@ -86,11 +86,7 @@ function useITableParamsData(
     ...iTableRequestFields,
     ...propsITableRequestFields,
   }
-  const { request } = useRequest({
-    responseHandler: {
-      responseSuccessText: false,
-    },
-  })
+  const { request } = useRequest({ successShowMessage: false })
   const [queryParams, setQueryParams] = useState({})
   const [urlSearchParams, setUrlSearchParams] = useState<string>()
 
