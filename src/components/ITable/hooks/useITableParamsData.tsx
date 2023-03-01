@@ -182,7 +182,7 @@ function useITableParamsData(
       }).then((res) => {
         let data = (dataFieldName ? res[dataFieldName] : res) ?? {}
         if (typeof responseDataHandler === 'function') {
-          data = responseDataHandler<typeof data, typeof res>(data, res)
+          data = responseDataHandler(data, res)
         }
         return {
           total: data[totalFieldName],

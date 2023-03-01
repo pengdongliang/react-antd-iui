@@ -1,11 +1,12 @@
 import React, {
   useCallback,
+  useContext,
   useImperativeHandle,
   useMemo,
   useRef,
   useState,
 } from 'react'
-import { useUpdateEffect } from 'ahooks'
+import { useDeepCompareEffect, useUpdateEffect } from 'ahooks'
 import { Space, Table } from 'antd'
 import type { TableProps } from 'antd'
 import type { GetRowKey } from 'rc-table/es/interface'
@@ -28,7 +29,13 @@ import useTableColumns, { ITableColumnTypes } from './hooks/useTableColumns'
 import { TableContainerStyled } from '@/components/ITable/styled'
 import type { EitherOr, RecordType, RefType } from './types/global'
 import { IFormRef } from '@/components/IForm/IForm'
-import { UseRequestOptionsType } from '@/index'
+import type { ConfigProviderProps, UseRequestOptionsType } from '@/index'
+import { ConfigContext } from '@/configProvider'
+
+/** ITable Instance */
+export interface ITableInstance extends UseITableParamsDataResultType {
+  dataSource?: Record<string, any>[]
+}
 
 /**
  * 表格上下文类型
@@ -123,11 +130,7 @@ export interface InitParamsType {
 /**
  * ITable Ref类型
  */
-export type ITableRef = React.Ref<
-  UseITableParamsDataResultType & {
-    dataSource?: Record<string, any>[]
-  }
->
+export type ITableRef = React.Ref<ITableInstance>
 
 /**
  * 表格props类型初始
@@ -175,7 +178,10 @@ export interface ITableProps<T = RecordType>
     params: Record<string, any>
   }) => Partial<UseRequestOptionsType>
   /** 回调方法处理请求返回的数据 */
-  responseDataHandler?: <TData, TRes>(data: TData, res: TRes) => TData
+  responseDataHandler?: (
+    data: Record<string, any>[],
+    res?: Record<string, any>
+  ) => Record<string, any>[]
   /** 禁用内置的表单和按钮 */
   disabled?: boolean
 }
@@ -202,6 +208,7 @@ const ITable = React.forwardRef(
     } = props
     const [editingRowKey, setEditingRowKey] = useState('')
     const iFormRef: IFormRef = useRef(null)
+    const { setITable } = useContext<ConfigProviderProps>(ConfigContext)
     /** 分页 */
     const { paginationConfig } = useITablePaginationConfig(initPaginationConfig)
     /** 数据处理 */
@@ -239,16 +246,6 @@ const ITable = React.forwardRef(
       },
       [paginationConfig, usetableParamsData]
     )
-
-    useImperativeHandle(ref, () => ({
-      ...usetableParamsData,
-      run,
-      dataSource:
-        Array.isArray(usetableParamsData?.data?.list) &&
-        usetableParamsData?.data?.list?.length
-          ? usetableParamsData?.data?.list
-          : useSimpleITableData?.dataSource,
-    }))
 
     const realDisabled = useMemo(
       () => disabled || usetableParamsData?.loading,
@@ -299,6 +296,28 @@ const ITable = React.forwardRef(
       }),
       [rowKey, editingRowKey]
     )
+
+    const iTableInstance = useMemo<ITableInstance>(() => {
+      return {
+        ...usetableParamsData,
+        run,
+        dataSource:
+          Array.isArray(usetableParamsData?.data?.list) &&
+          usetableParamsData?.data?.list?.length
+            ? usetableParamsData?.data?.list
+            : useSimpleITableData?.dataSource,
+      }
+    }, [run, useSimpleITableData?.dataSource, usetableParamsData])
+
+    useImperativeHandle(ref, () => iTableInstance)
+
+    useDeepCompareEffect(() => {
+      setITable({
+        ...usetableParamsData,
+        run,
+        dataSource: iTableInstance?.dataSource,
+      })
+    }, [setITable, useSimpleITableData?.dataSource, iTableInstance?.dataSource])
 
     return (
       <ItableContext.Provider value={ItableContextData}>

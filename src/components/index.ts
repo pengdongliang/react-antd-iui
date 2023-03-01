@@ -1,4 +1,4 @@
-export { default as ITable, ItableContext } from './ITable'
+export { default as ITable, ItableContext, useITableInstance } from './ITable'
 export type {
   ItableContextType,
   EditArgumentsType,
@@ -12,6 +12,7 @@ export type {
   ITableProps,
   ITablePropsEitherOr,
   ITableRef,
+  ITableInstance,
   PaginationConfigType,
   ITableRequestParamsType,
   ITableRequestFieldsType,

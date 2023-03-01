@@ -186,6 +186,10 @@ initParams = { initParams }
 | 返回 `run`                            | 开始请求方法                                     | `(args: RequestHandlerArgs) => Promise<any>`   | -    |
 | 返回 `use-http的所有返回对象`                | use-http的所有返回对象, Fetch返回 `run` 和 `loading` | `object`                                       | -    |
 
+### useITableInstance
+
+获取 `ITable` 实例, 返回 `ITableInstance`
+
 ## LICENSE
 
 MIT

@@ -172,22 +172,15 @@ function useRequest(props?: string | UseRequestProps) {
             .match(/^\[object\s(.*)\]$/)[1] === 'Object'
         ) {
           Object.entries(params).forEach(([key, value]) => {
-            let newValue
-            if (typeof filterRequestValue === 'boolean') {
-              if (filterRequestValue) {
-                if (value !== undefined && value !== '') {
-                  newValue = value
-                }
-              } else {
-                newValue = value
+            if (filterRequestValue) {
+              if (typeof filterRequestValue === 'function') {
+                const newValue = filterRequestValue(key, value)
+                newParamsData.append(key, newValue)
+              } else if (value !== undefined && value !== '') {
+                newParamsData.append(key, value)
               }
-            } else if (typeof filterRequestValue === 'function') {
-              newValue = filterRequestValue(key, value)
             } else {
-              newValue = value
-            }
-            if (newValue) {
-              newParamsData.append(key, newValue)
+              newParamsData.append(key, value)
             }
           })
         } else {

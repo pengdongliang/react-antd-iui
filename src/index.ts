@@ -1,4 +1,11 @@
-export { ITable, ItableContext, IForm, IInput } from './components'
+export {
+  ITable,
+  ItableContext,
+  IForm,
+  IInput,
+  useITableInstance,
+} from './components'
+
 export type {
   IFormItemType,
   UseTableFormType,
@@ -16,6 +23,7 @@ export type {
   ITableProps,
   ITablePropsEitherOr,
   ITableRef,
+  ITableInstance,
   PaginationConfigType,
   ITableRequestParamsType,
   ITableRequestFieldsType,
@@ -38,7 +46,7 @@ export type {
 } from './components/ITable/types/global'
 
 export { default as ConfigProvider } from './configProvider'
-export type { configContextType, ConfigProviderProps } from './configProvider'
+export type { ConfigProviderProps } from './configProvider'
 export * from 'ahooks'
 export { useRequest as useAHooksRequest } from 'ahooks'
 export { useExport, useTableDelete, useRequest } from './hooks'
