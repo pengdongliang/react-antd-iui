@@ -66,8 +66,6 @@ export interface UseRequestProps {
   options?: UseRequestOptionsType
   /** 响应后的操作 */
   responseHandler?: ResponseHandlerType
-  /** 请求成功是否提示, 默认true */
-  successShowMessage?: boolean
 }
 
 /**
@@ -88,19 +86,11 @@ function useRequest(props?: string | UseRequestProps) {
   }
 
   const responseFunc = useCallback(
-    ({
-      realResponseHandler,
-      error,
-      response,
-      res,
-      responseType,
-      successShowMessage = true,
-      method,
-    }) => {
+    ({ realResponseHandler, error, response, res, responseType, method }) => {
       return new Promise<Record<string, any>>((resolve, reject) => {
         const {
           responseDataHandler,
-          responseSuccessText = '请求成功',
+          responseSuccessText,
           responseErrorText = '请求失败',
           responseFields,
           successFunc = defaultSuccessFunc,
@@ -122,7 +112,7 @@ function useRequest(props?: string | UseRequestProps) {
                 const data = res[dataFieldName]
                 const msg = res[msgFieldName]
                 if (successFunc({ ...res, code, data, msg })) {
-                  if (successShowMessage && responseSuccessText) {
+                  if (responseSuccessText) {
                     message.success(responseSuccessText)
                   }
                   resolve(data ?? res)
@@ -159,7 +149,6 @@ function useRequest(props?: string | UseRequestProps) {
         api: requestApi,
         options: requestOptions = {},
         responseHandler,
-        successShowMessage,
       } = realArgs
       if (!requestApi) {
         throw new Error('请求地址不能为空')
@@ -221,7 +210,6 @@ function useRequest(props?: string | UseRequestProps) {
           response,
           res,
           responseType,
-          successShowMessage,
           method,
         })
       }
@@ -238,7 +226,6 @@ function useRequest(props?: string | UseRequestProps) {
             response: res,
             res: await res[responseType](),
             responseType,
-            successShowMessage,
             method,
           })
         })
