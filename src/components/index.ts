@@ -32,4 +32,13 @@ export type {
 } from './IForm'
 
 export { default as IInput } from './IInput'
-export type { IInputProps, IInputRef } from './IInput'
+export type {
+  IInputProps,
+  IInputRef,
+  ITextAreaProps,
+  ITextAreaRef,
+  ISearchProps,
+  ISearchRef,
+  IPasswordProps,
+  IPasswordRef,
+} from './IInput'

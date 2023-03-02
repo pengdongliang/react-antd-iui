@@ -161,12 +161,14 @@ initParams = { initParams }
 
 ### 组件功能
 
-1. [x] 支持失去焦点和回车去除空格
+1. [x] 内置 `useRemoveInputSpaces` 支持失去焦点和回车去除内容首尾空格
+2. [x] 支持 `IInput.ITextArea` `IInput.ISearch` `IInput.IPassword`
 
-| 参数       | 说明         | 类型               | 默认值                |
-|----------|------------|------------------|--------------------|
-| regex    | 替换正则       | `RegExp / false` | `/(^\s*)/(\s*$)/g` |
-| formName | form表单name | `string`         | `Input.id`         |
+| 参数             | 说明         | 类型               | 默认值                |
+|----------------|------------|------------------|--------------------|
+| regex          | 替换正则       | `RegExp / false` | `/(^\s*)/(\s*$)/g` |
+| formName       | form表单name | `string`         | `Input.id`         |
+| pressEnterFlag | 回车是否去除空格   | `boolean`        | `true`             |
 
 ## hooks
 
@@ -189,6 +191,17 @@ initParams = { initParams }
 ### useITableInstance
 
 获取 `ITable` 实例, 返回 `ITableInstance`
+
+### useRemoveInputSpaces
+
+去除 `input` 内容首尾空格, 支持失去焦点和回车
+`Antd Form` 直接使用, 未在 `Form` 里的 `Input` 通过 `onChange` 处理
+
+| 参数             | 说明         | 类型               | 默认值                |
+|----------------|------------|------------------|--------------------|
+| regex          | 替换正则       | `RegExp / false` | `/(^\s*)/(\s*$)/g` |
+| formName       | form表单name | `string`         | `Input.id`         |
+| pressEnterFlag | 回车是否去除空格   | `boolean`        | `true`             |
 
 ## LICENSE
 

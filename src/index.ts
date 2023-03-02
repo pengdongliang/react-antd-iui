@@ -49,7 +49,12 @@ export { default as ConfigProvider } from './configProvider'
 export type { ConfigProviderProps } from './configProvider'
 export * from 'ahooks'
 export { useRequest as useAHooksRequest } from 'ahooks'
-export { useExport, useTableDelete, useRequest } from './hooks'
+export {
+  useExport,
+  useTableDelete,
+  useRequest,
+  useRemoveInputSpaces,
+} from './hooks'
 export type {
   UseExportProps,
   DeleteHandlerArgs,
@@ -60,4 +65,5 @@ export type {
   RequestHandlerArgs,
   UseRequestOptionsType,
   UseRequestResponseFieldsType,
+  UseRemoveInputSpacesProps,
 } from './hooks'
