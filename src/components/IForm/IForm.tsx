@@ -32,13 +32,13 @@ export interface UseTableFormType {
   // 追加一行元素
   formItemRowNodes?: React.ReactNode
   // 是否显示查询按钮
-  showSearch?: boolean | React.ReactNode
+  showSearch?: boolean
   // 查询文本
   searchText?: string | React.ReactNode
   // 搜索按钮props
   searchProps?: ButtonProps
   // 是否显示重置按钮
-  showReset?: boolean | React.ReactNode
+  showReset?: boolean
   // 重置文本
   resetText?: string | React.ReactNode
   // 重置按钮props

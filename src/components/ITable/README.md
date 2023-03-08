@@ -64,8 +64,10 @@
 | formItemRowNodes    | 表单追加一行元素            | `React.ReactNode` | -      |
 | showSearch          | 是否显示查询按钮            | `boolean`         | `true` |
 | searchText          | 查询文本                | `string`          | `查询`   |
+| searchProps         | 查询按钮props           | `ButtonProps`     | -      |
 | showReset           | 是否显示查询按钮            | `boolean`         | `true` |
 | resetText           | 是否显示查询按钮            | `string`          | `重置`   |
+| resetProps          | 重置按钮props           | `ButtonProps`     | -      |
 
 #### **IFormItemType**
 
