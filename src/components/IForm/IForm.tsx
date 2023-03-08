@@ -1,8 +1,6 @@
 import React, { useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { Button, Col, Form, Row, Select, Space } from 'antd'
-import type { FormItemProps } from 'antd/es/form/FormItem'
-import type { FormProps } from 'antd/es/form'
-import { FormInstance } from 'antd/lib/form/hooks/useForm'
+import type { ButtonProps, FormProps, FormItemProps, FormInstance } from 'antd'
 import type { RecordType } from '../ITable/types/global'
 import { ITableColumnTypes, InitParamsType } from '../index'
 import { IInput } from '@/components'
@@ -34,13 +32,17 @@ export interface UseTableFormType {
   // 追加一行元素
   formItemRowNodes?: React.ReactNode
   // 是否显示查询按钮
-  showSearch?: boolean
+  showSearch?: boolean | React.ReactNode
   // 查询文本
-  searchText?: string
+  searchText?: string | React.ReactNode
+  // 搜索按钮props
+  searchProps?: ButtonProps
   // 是否显示重置按钮
-  showReset?: boolean
+  showReset?: boolean | React.ReactNode
   // 重置文本
-  resetText?: string
+  resetText?: string | React.ReactNode
+  // 重置按钮props
+  resetProps?: ButtonProps
   [k: string]: any
 }
 
@@ -103,11 +105,15 @@ const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
           itemNode = (
             <Select allowClear {...i?.itemProps}>
               {i?.itemProps?.options.map(
-                (p: { label: string; value: string | number }) => (
+                (
+                  p: { label: string; value: string | number },
+                  index: number
+                ) => (
                   <Option
                     {...i?.optionProps}
                     value={p?.value}
                     title={p?.label}
+                    key={`${index}_${p?.value}`}
                   />
                 )
               )}
@@ -138,6 +144,8 @@ const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
     showReset = true,
     searchText = '查询',
     resetText = '重置',
+    searchProps,
+    resetProps,
   } = useTableForm
 
   return (
@@ -153,11 +161,15 @@ const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
           <Col>
             <Space wrap size={20}>
               {showSearch && (
-                <Button type="primary" onClick={submit}>
+                <Button type="primary" onClick={submit} {...searchProps}>
                   {searchText}
                 </Button>
               )}
-              {showReset && <Button onClick={reset}>{resetText}</Button>}
+              {showReset && (
+                <Button onClick={reset} {...resetProps}>
+                  {resetText}
+                </Button>
+              )}
               {formItemAppendNodesItem}
             </Space>
           </Col>

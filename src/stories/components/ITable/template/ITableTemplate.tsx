@@ -4,6 +4,7 @@ import { App, message } from 'antd'
 import { Provider as HttpProvider } from 'use-http'
 import { ITable } from '@/index'
 import ConfigProvider from '@/configProvider'
+import 'dayjs/locale/zh-cn'
 
 export const Template: ComponentStory<typeof ITable> = (args) => {
   const apiOptions: any = {

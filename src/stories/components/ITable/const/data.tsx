@@ -1,5 +1,6 @@
-import { Typography } from 'antd'
+import { Button, DatePicker, Typography } from 'antd'
 import { ITableProps, RecordType } from '@/index'
+import { getInRecentDaysQuickAction } from '@/utils'
 
 export const tableData = [
   {
@@ -274,7 +275,66 @@ export const columns: ITableProps['columns'] = [
     width: 150,
     fixed: 'right',
     render: () => {
-      return [<Typography.Link>查看</Typography.Link>]
+      /** 注意key的使用 */
+      return [<Typography.Link key="preview">查看</Typography.Link>]
     },
   },
 ]
+
+export const useTableForm = {
+  formItemOptions: [
+    {
+      name: 'gender',
+      itemName: 'select',
+      itemProps: {
+        style: { width: '120px' },
+        options: [
+          {
+            value: 'male',
+            label: 'male',
+          },
+          {
+            value: 'lucy',
+            label: 'Lucy',
+          },
+          {
+            value: 'disabled',
+            disabled: true,
+            label: 'Disabled',
+          },
+          {
+            value: 'Yiminghe',
+            label: 'yiminghe',
+          },
+        ],
+      },
+      formItemProps: { initialValue: 'lucy' },
+    },
+    {
+      name: 'name',
+      itemName: 'input',
+      itemProps: { placeholder: '请输入名称' },
+      formItemProps: {
+        label: '名称',
+        // rules: [{ required: true, message: '请输入名称' }],
+      },
+    },
+    {
+      name: 'time',
+      itemNode: (
+        <DatePicker.RangePicker
+          showTime
+          style={{ width: '340px' }}
+          format="YYYY-MM-DD HH:mm:ss"
+          presets={getInRecentDaysQuickAction()}
+        />
+      ),
+    },
+  ],
+  formItemAppendNodes: (
+    <>
+      <Button key="add">添加</Button>
+      <Button key="syncRefresh">删除</Button>
+    </>
+  ),
+}

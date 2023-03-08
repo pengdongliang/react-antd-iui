@@ -1,11 +1,11 @@
 import { ComponentMeta } from '@storybook/react'
-import { ITable } from '@/index'
-import { columns } from '@/stories/components/ITable/const/data'
-// import 'antd/es/table/style/css.js'
+import { IForm, ITable } from '@/index'
+import { columns, useTableForm } from '@/stories/components/ITable/const/data'
 
 export default {
   title: 'ITable 表格',
   component: ITable,
+  subcomponents: { IForm },
   excludeStories: ['Template', /.*Data$/],
   argTypes: {},
   args: {
@@ -24,6 +24,7 @@ export default {
     requestOptions: ({ params }) => ({ params }),
     filterRequestValue: (key, value) => value,
     responseDataHandler: (data, res) => data,
+    useTableForm,
   },
 } as ComponentMeta<typeof ITable>
 
