@@ -5,7 +5,7 @@ import useRemoveInputSpaces, {
   UseRemoveInputSpacesProps,
 } from './hooks/useRemoveInputSpaces'
 
-export interface IInputProps extends InputProps, UseRemoveInputSpacesProps {}
+export type IInputProps = InputProps & UseRemoveInputSpacesProps
 
 export type IInputRef = InputRef
 

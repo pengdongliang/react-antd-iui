@@ -149,6 +149,8 @@ export interface ITableProps<T = RecordType>
   blockAutoRequestFlag?: boolean | 'auto'
   /** 是否是简单表格, 不请求数据和分页, 使用传过来的数据 */
   simpleTableFlag?: boolean
+  /** 是否使用搜索栏 */
+  showSearchBar?: boolean
   /** 使用搜索栏的表单配置参数 */
   useTableForm?: UseTableFormType
   /** 编辑表格的配置参数 */
@@ -200,6 +202,7 @@ const ITable = React.forwardRef(
       initParams,
       blockAutoRequestFlag,
       simpleTableFlag,
+      showSearchBar = true,
       useTableForm,
       editableConfig,
       serialNumber = true,
@@ -232,24 +235,26 @@ const ITable = React.forwardRef(
       ...useAntdTableOptions,
       defaultParams,
       manual: blockAutoRequestFlag,
-      ...(useTableForm ? { form: iFormRef?.current?.formRef } : {}),
+      ...(showSearchBar && useTableForm
+        ? { form: iFormRef?.current?.formRef }
+        : {}),
     } as UseAntdTableOptionsType
-    const usetableParamsData = useITableParamsData({
+    const useTableParamsData = useITableParamsData({
       ...props,
       useAntdTableOptions: realUseAntdTableOptions,
     })
-    const { tableProps } = usetableParamsData
+    const { tableProps } = useTableParamsData
     const run = useCallback(
       (args = {}) => {
         const { current, pageSize } = paginationConfig
-        usetableParamsData.run({ current, pageSize }, { ...args })
+        useTableParamsData.run({ current, pageSize }, { ...args })
       },
-      [paginationConfig, usetableParamsData]
+      [paginationConfig, useTableParamsData]
     )
 
     const realDisabled = useMemo(
-      () => disabled || usetableParamsData?.loading,
-      [disabled, usetableParamsData?.loading]
+      () => disabled || useTableParamsData?.loading,
+      [disabled, useTableParamsData?.loading]
     )
 
     useUpdateEffect(() => {
@@ -299,21 +304,21 @@ const ITable = React.forwardRef(
 
     const iTableInstance = useMemo<ITableInstance>(() => {
       return {
-        ...usetableParamsData,
+        ...useTableParamsData,
         run,
         dataSource:
-          Array.isArray(usetableParamsData?.data?.list) &&
-          usetableParamsData?.data?.list?.length
-            ? usetableParamsData?.data?.list
+          Array.isArray(useTableParamsData?.data?.list) &&
+          useTableParamsData?.data?.list?.length
+            ? useTableParamsData?.data?.list
             : useSimpleITableData?.dataSource,
       }
-    }, [run, useSimpleITableData?.dataSource, usetableParamsData])
+    }, [run, useSimpleITableData?.dataSource, useTableParamsData])
 
     useImperativeHandle(ref, () => iTableInstance)
 
     useDeepCompareEffect(() => {
       setITable({
-        ...usetableParamsData,
+        ...useTableParamsData,
         run,
         dataSource: iTableInstance?.dataSource,
       })
@@ -322,9 +327,9 @@ const ITable = React.forwardRef(
     return (
       <ItableContext.Provider value={ItableContextData}>
         <Space direction="vertical" style={{ display: 'flex' }}>
-          {useTableForm ? (
+          {showSearchBar && useTableForm ? (
             <IForm
-              {...usetableParamsData?.search}
+              {...useTableParamsData?.search}
               initParams={initParams}
               useTableForm={useTableForm}
               columns={columns}

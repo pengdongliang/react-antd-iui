@@ -1,7 +1,8 @@
-import { useFetch } from 'use-http'
 import { useCallback } from 'react'
+import { message } from 'antd'
 import { exportBlob } from '@/utils'
-import { IRequestProps } from './index'
+import { useRequest } from './index'
+import type { IRequestProps } from './index'
 
 /**
  * 导出运行函数参数类型
@@ -22,13 +23,16 @@ export type UseExportProps = ExportHandlerArgs
  * 导出钩子
  * @param props
  */
-function useExport(props: UseExportProps) {
-  const http = useFetch({
-    responseType: 'blob',
+function useExport(props?: UseExportProps) {
+  const http = useRequest({
+    options: {
+      responseType: 'blob',
+    },
   })
+  const { request, ...restProps } = http
 
   const exportHandler = useCallback(
-    async (args: ExportHandlerArgs) => {
+    async (args?: ExportHandlerArgs) => {
       const {
         api,
         method = 'get',
@@ -37,19 +41,20 @@ function useExport(props: UseExportProps) {
         callback,
         fileName,
       } = { ...props, ...args }
-      const { response } = http
-      const queryParams = new URLSearchParams(params).toString()
-      const url = (queryParams ? `${api}?${queryParams}` : api) as string
-      const res = await http[method](url, body)
-      if (response.ok && res instanceof Blob) {
+      if (!api) {
+        throw new Error('请求地址不能为空')
+      }
+      const res = await request({ api, options: { method, params, body } })
+      if (res instanceof Blob) {
         exportBlob(res, fileName)
-        if (callback) callback()
+        message.success('导出成功')
+        if (typeof callback === 'function') callback()
       }
     },
-    [props, http]
+    [props, request]
   )
 
-  return { ...http, exportHandler }
+  return { ...restProps, exportHandler }
 }
 
 export default useExport
