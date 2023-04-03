@@ -1,6 +1,6 @@
 import { ComponentStory } from '@storybook/react'
 import zhCN from 'antd/locale/zh_CN'
-import { App, message } from 'antd'
+import { App, Button, message, Space } from 'antd'
 import { Provider as HttpProvider } from 'use-http'
 import { ITable } from '@/index'
 import ConfigProvider from '@/configProvider'
@@ -50,7 +50,12 @@ export const Template: ComponentStory<typeof ITable> = (args) => {
         antdContextOptions={{ locale: zhCN }}
       >
         <App>
-          <ITable {...args} />
+          <ITable {...args}>
+            <Space>
+              <Button key="add">添加</Button>
+              <Button key="syncRefresh">导出</Button>
+            </Space>
+          </ITable>
         </App>
       </ConfigProvider>
     </HttpProvider>

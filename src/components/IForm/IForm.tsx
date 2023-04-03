@@ -55,6 +55,7 @@ export interface IFormProps {
   columns?: ITableColumnTypes<RecordType>
   /** 禁用表单 */
   disabled?: boolean
+  className?: string
 }
 
 export type IFormRef = React.Ref<{
@@ -63,7 +64,7 @@ export type IFormRef = React.Ref<{
 
 const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
   const [form] = Form.useForm()
-  const { submit, reset, initParams, useTableForm, disabled } = props
+  const { submit, reset, initParams, useTableForm, disabled, className } = props
 
   const formRef = useMemo(() => form, [form])
   useImperativeHandle(ref, () => ({
@@ -154,12 +155,13 @@ const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
       {...useTableForm?.formProps}
       form={form}
       initialValues={initialValues}
+      className={className}
     >
       <Space direction="vertical">
         <Row gutter={24}>
           {formItemNode}
           <Col>
-            <Space wrap size={20}>
+            <Space wrap size={13}>
               {showSearch && (
                 <Button type="primary" onClick={submit} {...searchProps}>
                   {searchText}

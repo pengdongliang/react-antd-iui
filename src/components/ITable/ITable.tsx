@@ -35,6 +35,8 @@ import { ConfigContext } from '@/configProvider'
 /** ITable Instance */
 export interface ITableInstance extends UseITableParamsDataResultType {
   dataSource?: Record<string, any>[]
+  /** 搜索栏Form Ref */
+  iFormRef?: RefType
 }
 
 /**
@@ -306,6 +308,7 @@ const ITable = React.forwardRef(
       return {
         ...useTableParamsData,
         run,
+        iFormRef,
         dataSource:
           Array.isArray(useTableParamsData?.data?.list) &&
           useTableParamsData?.data?.list?.length
@@ -317,16 +320,18 @@ const ITable = React.forwardRef(
     useImperativeHandle(ref, () => iTableInstance)
 
     useDeepCompareEffect(() => {
-      setITable({
-        ...useTableParamsData,
-        run,
-        dataSource: iTableInstance?.dataSource,
-      })
+      if (typeof setITable === 'function') {
+        setITable({
+          ...useTableParamsData,
+          run,
+          dataSource: iTableInstance?.dataSource,
+        })
+      }
     }, [setITable, useSimpleITableData?.dataSource, iTableInstance?.dataSource])
 
     return (
       <ItableContext.Provider value={ItableContextData}>
-        <Space direction="vertical" style={{ display: 'flex' }}>
+        <Space direction="vertical" style={{ display: 'flex' }} size={6}>
           {showSearchBar && useTableForm ? (
             <IForm
               {...useTableParamsData?.search}
@@ -335,10 +340,11 @@ const ITable = React.forwardRef(
               columns={columns}
               disabled={realDisabled}
               ref={iFormRef}
+              className="iForm_container"
             />
           ) : null}
-          {props.children}
           <TableContainerStyled>
+            <div className="iTable_before_cotainer">{props.children}</div>
             <Table
               {...defaultItableConfig}
               {...editableData}
@@ -346,6 +352,7 @@ const ITable = React.forwardRef(
               {...tableProps}
               {...useSimpleITableData}
               columns={realColumns}
+              className="iTable_container"
             />
           </TableContainerStyled>
         </Space>
