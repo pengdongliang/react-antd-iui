@@ -8,7 +8,7 @@ import React, {
 } from 'react'
 import { useDeepCompareEffect, useUpdateEffect } from 'ahooks'
 import { Space, Table } from 'antd'
-import type { TableProps } from 'antd'
+import type { TableProps, FormInstance } from 'antd'
 import type { GetRowKey } from 'rc-table/es/interface'
 import type {
   AntdTableOptions,
@@ -31,12 +31,13 @@ import type { EitherOr, RecordType, RefType } from './types/global'
 import { IFormRef } from '@/components/IForm/IForm'
 import type { ConfigProviderProps, UseRequestOptionsType } from '@/index'
 import { ConfigContext } from '@/configProvider'
+import { RequestHandlerArgs } from '@/index'
 
 /** ITable Instance */
 export interface ITableInstance extends UseITableParamsDataResultType {
   dataSource?: Record<string, any>[]
   /** 搜索栏Form Ref */
-  iFormRef?: RefType
+  iFormRef?: FormInstance
 }
 
 /**
@@ -102,10 +103,7 @@ export type ItableQueryType = {
   /** 获取数据接口地址，比获取表格数据方法优先 */
   getTableDataApi: string
   /** 获取表格数据方法, 返回一个Promise */
-  getTableData: (
-    pagination: UseAntdTablePaginationType,
-    formData: Record<string, unknown>
-  ) => Promise<UseAntdRowItemType>
+  getTableData: (args: RequestHandlerArgs) => Promise<Record<string, any>>
 }
 
 /**
@@ -303,12 +301,11 @@ const ITable = React.forwardRef(
       }),
       [rowKey, editingRowKey]
     )
-
     const iTableInstance = useMemo<ITableInstance>(() => {
       return {
         ...useTableParamsData,
         run,
-        iFormRef,
+        iFormRef: iFormRef?.current?.formRef,
         dataSource:
           Array.isArray(useTableParamsData?.data?.list) &&
           useTableParamsData?.data?.list?.length

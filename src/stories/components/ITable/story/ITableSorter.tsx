@@ -3,6 +3,13 @@ import { Template } from '@/stories/components/ITable/template'
 const ITableSorter = Template.bind({})
 
 ITableSorter.args = {
+  getTableData: (args) => {
+    const { options } = args ?? {}
+    const { params } = options ?? {}
+    return fetch(
+      `https://randomuser.me/api?${new URLSearchParams(params).toString()}`
+    ).then((res) => res.json())
+  },
   requestParamsHandler: (searchParams, formData, extraParams) => {
     /** 手动排序 */
     let newExtraParams = extraParams

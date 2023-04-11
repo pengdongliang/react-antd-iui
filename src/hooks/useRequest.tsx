@@ -3,6 +3,7 @@ import { useCallback, useContext, useState } from 'react'
 import { message } from 'antd'
 import { IncomingOptions } from 'use-http/dist/cjs/types'
 import { ConfigContext } from '@/configProvider'
+import { filterRequestParams } from '@/utils'
 
 export interface IRequestProps {
   /** 请求地址 */
@@ -52,9 +53,7 @@ export interface ResponseHandlerType {
 export type UseRequestOptionsType = IncomingOptions &
   Pick<IRequestProps, 'params' | 'body'> & {
     /** 过滤请求参数值, 默认过滤`undefined和""` */
-    filterRequestValue?:
-      | boolean
-      | (<TValue>(key: string, value: TValue) => TValue)
+    filterRequestValue?: true | ((key: string, value: any) => any)
   }
 
 /**
@@ -164,30 +163,9 @@ function useRequest(props?: string | UseRequestProps) {
         filterRequestValue,
       } = requestOptions
       const { response, error } = http
-      let newParamsData = new URLSearchParams()
-      if (params) {
-        if (
-          Object.prototype.toString
-            .call(params)
-            .match(/^\[object\s(.*)\]$/)[1] === 'Object'
-        ) {
-          Object.entries(params).forEach(([key, value]) => {
-            if (filterRequestValue) {
-              if (typeof filterRequestValue === 'function') {
-                const newValue = filterRequestValue(key, value)
-                newParamsData.append(key, newValue)
-              } else if (value !== undefined && value !== '') {
-                newParamsData.append(key, value)
-              }
-            } else {
-              newParamsData.append(key, value)
-            }
-          })
-        } else {
-          newParamsData = new URLSearchParams(params)
-        }
-      }
-      const queryParams = newParamsData.toString()
+      const queryParams = new URLSearchParams(
+        filterRequestParams(params, filterRequestValue)
+      )
       const url = (
         queryParams ? `${requestApi}?${queryParams}` : requestApi
       ) as string

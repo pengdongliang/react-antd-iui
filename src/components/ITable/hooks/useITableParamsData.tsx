@@ -5,7 +5,11 @@ import type { UseAntdRowItemType, ITablePropsEitherOr } from '../ITable'
 import { UseAntdTablePaginationType } from '../ITable'
 import { ConfigContext } from '@/configProvider'
 import { useRequest } from '@/index'
-import { lowerLineToSmallHump, smallHumpToLowerLine } from '@/utils'
+import {
+  filterRequestParams,
+  lowerLineToSmallHump,
+  smallHumpToLowerLine,
+} from '@/utils'
 
 /**
  * 表格请求接口方法类型
@@ -90,9 +94,7 @@ function useITableParamsData(
   const [queryParams, setQueryParams] = useState({})
   const [urlSearchParams, setUrlSearchParams] = useState<string>()
 
-  if (getTableData) {
-    getTableDataPromise = getTableData
-  } else if (getTableDataApi) {
+  if (getTableDataApi || typeof getTableData === 'function') {
     getTableDataPromise = (
       searchParams: UseAntdTablePaginationType,
       formData: Record<string, any>
@@ -142,24 +144,7 @@ function useITableParamsData(
         ...realFormData,
       }
 
-      const newParamsData = {}
-      Object.entries(paramsData).forEach(([key, value]) => {
-        let newValue
-        if (typeof filterRequestValue === 'boolean') {
-          if (filterRequestValue) {
-            if (value !== undefined && value !== '') {
-              newValue = value
-            }
-          } else {
-            newValue = value
-          }
-        } else if (typeof filterRequestValue === 'function') {
-          newValue = filterRequestValue(key, value)
-        } else {
-          newValue = value
-        }
-        if (newValue) newParamsData[key] = newValue
-      })
+      const newParamsData = filterRequestParams(paramsData, filterRequestValue)
       setQueryParams(newParamsData)
       setUrlSearchParams(new URLSearchParams(newParamsData).toString())
 
@@ -168,10 +153,10 @@ function useITableParamsData(
         params,
         body,
       } = typeof requestOptions === 'function'
-        ? requestOptions({ params: paramsData })
-        : { params: paramsData, body: undefined }
+        ? requestOptions({ params: newParamsData })
+        : { params: newParamsData, body: undefined }
 
-      return request({
+      return (getTableData ?? request)({
         api: getTableDataApi,
         options: {
           method,

@@ -5,29 +5,12 @@ import { UseAntdRowItemType, UseAntdTablePaginationType } from '~/src'
 const ITableDemos = Template.bind({})
 
 ITableDemos.args = {
-  getTableData: (
-    searchParams: UseAntdTablePaginationType,
-    paramsData: Record<string, unknown>
-  ): Promise<UseAntdRowItemType> => {
-    let urlParams = ''
-    const { current, pageSize } = searchParams
-    Object.entries({ ...paramsData, current, pageSize }).forEach(
-      ([key, value]) => {
-        if (value !== undefined && `${value}` !== '') {
-          urlParams += `${urlParams ? '&' : ''}${key}=${encodeURI(`${value}`)}`
-        }
-      }
-    )
+  getTableData: (args): Promise<UseAntdRowItemType> => {
+    const { options } = args ?? {}
+    const { params } = options ?? {}
     return fetch(
-      `https://randomuser.me/api?results=${
-        paramsData?.results ?? 10
-      }&${urlParams}`
-    )
-      .then((res) => res.json())
-      .then((res) => ({
-        total: 100,
-        list: res.results,
-      }))
+      `https://randomuser.me/api?${new URLSearchParams(params).toString()}`
+    ).then((res) => res.json())
   },
   // ref: itableRef,
   blockAutoRequestFlag: false,
