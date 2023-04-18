@@ -341,7 +341,9 @@ const ITable = React.forwardRef(
             />
           ) : null}
           <TableContainerStyled>
-            <div className="iTable_before_cotainer">{props.children}</div>
+            {props.children ? (
+              <div className="iTable_before_cotainer">{props.children}</div>
+            ) : null}
             <Table
               {...defaultItableConfig}
               {...editableData}

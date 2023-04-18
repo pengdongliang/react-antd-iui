@@ -161,7 +161,7 @@ const IForm = React.forwardRef((props: IFormProps, ref: IFormRef) => {
         <Row gutter={24}>
           {formItemNode}
           <Col>
-            <Space wrap size={13}>
+            <Space wrap size={14}>
               {showSearch && (
                 <Button type="primary" onClick={submit} {...searchProps}>
                   {searchText}

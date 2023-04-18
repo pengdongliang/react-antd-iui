@@ -165,7 +165,7 @@ function useRequest(props?: string | UseRequestProps) {
       const { response, error } = http
       const queryParams = new URLSearchParams(
         filterRequestParams(params, filterRequestValue)
-      )
+      ).toString()
       const url = (
         queryParams ? `${requestApi}?${queryParams}` : requestApi
       ) as string
